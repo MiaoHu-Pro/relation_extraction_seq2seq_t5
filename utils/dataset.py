@@ -7,13 +7,14 @@ import numpy as np
 from torch.utils.data import DataLoader, Dataset
 import json
 
-from utilities import get_args
+from utils.utilities import get_args
 
 
 # 使用分词器对数据集编码
 def create_data(data, tokenizer, max_len=512, term='train'):
     datasets = []
     for title, content in data:
+        features = {}
         text_ids = tokenizer.encode(content, max_length=max_len, truncation='only_first')
         # 如果是训练集，对标题也进行编码
         if term == 'train':
@@ -51,10 +52,14 @@ def sequence_padding(inputs, length=None, padding=0):
     return np.array(outputs, dtype='int64')
 
 
-def collate_fn(data, conf):
+def collate_fn_train(data, conf):
+
+    text_list = [value[0] for value in data]
+    triple = [value[1] for value in data]
+
     datasets = []
     for text, triples_text in data:
-        print('text', text)
+        # print_row(text, triples_text)
         text_ids = conf.tokenizer(text, max_length=conf.max_len, padding='longest')
 
         # "spo_list": [
@@ -63,9 +68,6 @@ def collate_fn(data, conf):
         #     {"subject": "Penh", "object": "Cambodia", "predicate": "/location/administrative_division/country"},
         #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/capital"}]
 
-
-
-        print(triples_text)
         triples_seq_ids = conf.tokenizer(triples_text, max_length=conf.max_len, padding='longest')
         features = {'input_ids': text_ids,
                     'decoder_input_ids': triples_seq_ids,
@@ -78,10 +80,33 @@ def collate_fn(data, conf):
     return datasets
 
 
+def collate_fn_dev(data, conf):
+    datasets = []
+    labels = []
+    for text, triples_text in data:
+        # print_row(text, triples_text)
+        text_ids = conf.tokenizer(text, max_length=conf.max_len, padding='longest')
+        features = {'input_ids': text_ids,
+                    'attention_mask': [1] * len(text_ids),
+
+                    }
+        labels.append({'triples_text': triples_text})
+        datasets.append(features)
+
+    return datasets, labels
+
+def print_row(text, triples):
+    print("=" * 20)
+    print("text", text)
+    print("spo_list", triples)
+    print("=" * 20)
+
+
 class MyDataset(Dataset):
     def __init__(self, data_path):
         super().__init__()
         self.dataset = [json.loads(line) for line in open(data_path, encoding='utf8')]
+        print("dataset len", len(self.dataset))
 
     def __len__(self):
         return len(self.dataset)
@@ -95,14 +120,33 @@ class MyDataset(Dataset):
             for t in spo_list
         )
 
-        print(text, triples)
+        return text, triples
 
+
+    def get_text(self, item):
+        content = self.dataset[item]
+        text = content['text']
+        spo_list = content['spo_list']
+        triples = " ; ".join(
+            f"{t['subject']} has a relation of {t['predicate']} with {t['object']}"
+            for t in spo_list
+        )
+        # print("=" * 20)
+        # print_row(text, triples)
         return text, triples
 
 
 def prepare_data(conf):
     # 实例化训练集dataset
+    # print("perpare_data")
+    # print(conf.train_data)
     train_dataset = MyDataset(conf.train_data)
+    # for i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]:
+    #     # 打印训练集的前20条数据
+    #     print("train_dataset",  )
+    #
+    #     train_dataset.get_text(i)
+
     # 实例化验证集dataset
     dev_dataset = MyDataset(conf.dev_data)
     # 实例化测试集dataset
@@ -112,21 +156,21 @@ def prepare_data(conf):
     train_dataloader = DataLoader(dataset=train_dataset,
                                   batch_size=conf.batch_size,
                                   shuffle=True,
-                                  collate_fn=partial(collate_fn, conf=conf),
+                                  collate_fn=partial(collate_fn_train, conf=conf),
                                   drop_last=True)
 
     # 实例化验证数据集的dataloader
     dev_dataloader = DataLoader(dataset=dev_dataset,
                                 batch_size=conf.batch_size,
                                 shuffle=True,
-                                collate_fn=partial(collate_fn, conf=conf),
+                                collate_fn=partial(collate_fn_dev, conf=conf),
                                 drop_last=True)
 
     # 实例化测试数据集的dataloader
     test_dataloader = DataLoader(dataset=test_dataset,
                                  batch_size=conf.batch_size,
                                  shuffle=True,
-                                 collate_fn=partial(collate_fn, conf=conf),
+                                 collate_fn=partial(collate_fn_dev, conf=conf),
                                  drop_last=True)
 
     return train_dataloader, dev_dataloader, test_dataloader

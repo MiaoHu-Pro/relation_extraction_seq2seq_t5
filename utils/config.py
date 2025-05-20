@@ -53,18 +53,19 @@ class Config():
         self.data_base_dir = args.data_base_dir
         self.dataset = args.dataset
         self.max_len = args.max_len
+        self.max_len_generate = args.max_len_generate
 
         # 定义数据路径
         here = pathlib.Path(__file__).resolve().parent
         data_dir = os.path.join(here.parent, "data") + os.sep + args.dataset
-        self.train_data = data_dir + '/train.json'
+        self.train_data = data_dir + '/train_demo.json'
         self.dev_data = data_dir + '/dev.json'
         self.test_data = data_dir + '/test.json'
         self.relation_data = data_dir + '/relation.json'
         self.id2rel = json.load(open(self.relation_data, encoding='utf-8'))
         self.rel_vocab = Vocabulary(padding=None, unknown=None)
         self.rel_vocab.add_word_lst(list(self.id2rel.values()))
-
+        self.data_parallel = args.data_parallel
         self.learning_rate = args.learning_rate
         self.hidden_dim = args.hidden_dim
         self.epochs = args.epochs

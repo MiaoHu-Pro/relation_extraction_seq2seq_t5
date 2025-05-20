@@ -22,11 +22,11 @@ from utils.utilities import get_args
 from transformers import get_linear_schedule_with_warmup
 from torch.optim import AdamW
 from transformers.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WEIGHTS_NAME, CONFIG_NAME
-from model.Text2TripleModel import Text2TripleT5, Text2TripleBart
-
+# from model.Text2TripleModel import Text2TripleT5, Text2TripleBart
+from transformers import T5Model, BartModel
 MODELS = {
-    't5': Text2TripleT5,
-    'bart': Text2TripleBart,
+    't5': T5Model,
+    'bart': BartModel,
 }
 
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0,1,2,3"
@@ -62,8 +62,10 @@ def main():
 
 
 def run_train(config, train_dataloader, dev_dataloader):
-    model = MODELS[config.model_type](conf=config).to(config.device)
+    # model = MODELS[config.model_type](conf=config).to(config.device)
+    # model = MODELS[config.model_type].to(config.device)
 
+    model = config.model
     if config.data_parallel and torch.cuda.is_available():
         device_ids = range(torch.cuda.device_count())
         model = torch.nn.DataParallel(model, device_ids=device_ids)

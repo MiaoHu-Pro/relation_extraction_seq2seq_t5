@@ -1,4 +1,4 @@
 
 
-def model2test():
+def model2test(model, config, test_dataloader):
     pass
