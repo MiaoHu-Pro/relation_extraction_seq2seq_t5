@@ -54,6 +54,7 @@ def sequence_padding(inputs, length=None, padding=0):
 
 import re
 
+
 def clean_predicate(p: str) -> str:
     # 1) strip leading/trailing slashes/underscores
     p = p.strip("/_")
@@ -69,7 +70,6 @@ def collate_fn_train(data, conf):
     #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/location/contains"},
     #     {"subject": "Penh", "object": "Cambodia", "predicate": "/location/administrative_division/country"},
     #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/capital"}]
-
 
     text_list = [ex[0] for ex in data]
     spo_lists = [ex[1] for ex in data]
@@ -90,7 +90,7 @@ def collate_fn_train(data, conf):
         # join the per-spo pieces with your triple separator
         targets.append(f" {SEP} ".join(pieces))
 
-    print("targets===> ", targets)
+    # print("targets===> ", targets)
     # tokenize source and target
     src = conf.tokenizer(text_list,
                          max_length=conf.max_len,
@@ -149,7 +149,7 @@ def collate_fn_train(data, conf):
 def spo_list_to_triple_string(spo_list):
     SEP = "<TRIPLE>"
     SUB = "<SUBJ>"
-    PRED= "<PRED>"
+    PRED = "<PRED>"
     OBJ = "<OBJ>"
     pieces = []
     for spo in spo_list:
@@ -161,7 +161,6 @@ def spo_list_to_triple_string(spo_list):
 
 
 def collate_fn_dev(data, conf):
-
     """
     data: list of (text_str, spo_list) for each example in the dev set.
     returns:
@@ -188,13 +187,14 @@ def collate_fn_dev(data, conf):
     input_ids = torch.tensor(src["input_ids"]).to(conf.device)
     attention_mask = torch.tensor(src["attention_mask"]).to(conf.device)
 
-    return {
+    data_fetures = {
         "input_ids": input_ids,
         "attention_mask": attention_mask,
         "text_list": text_list,  # raw inputs, for logging if you like
-        "targets_str": targets_str,  # raw gold triple strings, for metrics
+        "triples_token": targets_str,  # raw gold triple strings, for metrics
     }
-
+    # print("data_fetures===> ", data_fetures)
+    return data_fetures
 
     # text_list = [value[0] for value in data]
     # spo_lists = [value[1] for value in data]
@@ -231,8 +231,6 @@ def collate_fn_dev(data, conf):
     # # print("features: ", features)
     #
     # return features
-
-
 
 
 def print_row(text, triples):
