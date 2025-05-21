@@ -61,6 +61,8 @@ def main():
         run_test(config, test_dataloader)
 
 
+
+
 def run_train(config, train_dataloader, dev_dataloader):
     # model = MODELS[config.model_type](conf=config).to(config.device)
     # model = MODELS[config.model_type].to(config.device)
@@ -97,8 +99,8 @@ def run_train(config, train_dataloader, dev_dataloader):
 
 def run_test(config, test_dataloader):
     logger.info('do testing ...')
-    model = MODELS[config.model_type](conf=config).to(config.device)
-
+    # model = MODELS[config.model_type](conf=config).to(config.device)
+    model = config.model
     best_model_path = config.trained_model_path + 'best_f1.pth'
     last_model_path = config.trained_model_path + 'last_model.pth'
 
@@ -115,11 +117,16 @@ def run_test(config, test_dataloader):
         raise FileNotFoundError(f"Neither {best_model_path} nor {last_model_path} exists.")
 
     # 模型训练
-    df = model2test(model, config, test_dataloader)
+    result = model2test(model, config, test_dataloader)
     logger.info('------------------test result------------------')
-    logger.info(df)
+    logger.info(result)
 
-    df.to_csv(config.trained_model_path + 'test_result.txt', index=True, sep=',')
+    with open(config.trained_model_path + 'test_result.txt') as f:
+        for key, value in result.items():
+            f.write(f'{key}: {value}\n')
+        f.close()
+
+
 
 
 if __name__ == '__main__':

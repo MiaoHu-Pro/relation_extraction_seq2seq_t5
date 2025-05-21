@@ -53,47 +53,75 @@ def sequence_padding(inputs, length=None, padding=0):
 
 
 def collate_fn_train(data, conf):
+    # "spo_list": [
+    #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/administrative_divisions"},
+    #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/location/contains"},
+    #     {"subject": "Penh", "object": "Cambodia", "predicate": "/location/administrative_division/country"},
+    #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/capital"}]
 
     text_list = [value[0] for value in data]
-    triple = [value[1] for value in data]
+    triple_list = [value[1] for value in data]
+    triples_token = [
+        " ; ".join(
+            f"{t['subject']}' {conf.tokenizer.eos_token }  "
+            f"{t['predicate'].strip('/').replace('/', ' ').replace('_', ' ')}  "
+            f" {conf.tokenizer.eos_token} {t['object']}"
+            for t in example_spo_list
+        )
+        for example_spo_list in triple_list
+    ]
 
-    datasets = []
-    for text, triples_text in data:
-        # print_row(text, triples_text)
-        text_ids = conf.tokenizer(text, max_length=conf.max_len, padding='longest')
 
-        # "spo_list": [
-        #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/administrative_divisions"},
-        #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/location/contains"},
-        #     {"subject": "Penh", "object": "Cambodia", "predicate": "/location/administrative_division/country"},
-        #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/capital"}]
+    # triples_token = [
+    #     " ; ".join(
+    #         f"{t['subject']} has a relation of {t['predicate']} with {t['object']}"
+    #         for t in example_spo_list
+    #     )
+    #     for example_spo_list in triple_list
+    # ]
 
-        triples_seq_ids = conf.tokenizer(triples_text, max_length=conf.max_len, padding='longest')
-        features = {'input_ids': text_ids,
-                    'decoder_input_ids': triples_seq_ids,
-                    'attention_mask': [1] * len(text_ids),
-                    'decoder_attention_mask': [1] * len(triples_seq_ids)
-                    }
+    # Encode the text list with padding
+    text = conf.tokenizer(text_list, max_length=conf.max_len, padding="longest")
+    triples = conf.tokenizer(triples_token, max_length=conf.max_len, padding="longest")
 
-        datasets.append(features)
+    features = {'input_ids': torch.tensor(text['input_ids']).to(conf.device),
+                'decoder_input_ids': torch.tensor(triples['input_ids']).to(conf.device),
+                'attention_mask': torch.tensor(text['attention_mask']).to(conf.device),
+                'decoder_attention_mask': torch.tensor(triples['attention_mask']).to(conf.device),
+                }
 
-    return datasets
+    # print(f"features: {features}")
+
+    return features
 
 
 def collate_fn_dev(data, conf):
-    datasets = []
-    labels = []
-    for text, triples_text in data:
-        # print_row(text, triples_text)
-        text_ids = conf.tokenizer(text, max_length=conf.max_len, padding='longest')
-        features = {'input_ids': text_ids,
-                    'attention_mask': [1] * len(text_ids),
+    text_list = [value[0] for value in data]
+    triple_list = [value[1] for value in data]
 
-                    }
-        labels.append({'triples_text': triples_text})
-        datasets.append(features)
+    triples_token = [
+        " ; ".join(
+            f"{t['subject']}' {conf.tokenizer.eos_token }  "
+            f"{t['predicate'].strip('/').replace('/', ' ').replace('_', ' ')}  "
+            f" {conf.tokenizer.eos_token} {t['object']}"
+            for t in example_spo_list
+        )
+        for example_spo_list in triple_list
+    ]
 
-    return datasets, labels
+    # Encode the text list with padding
+    text = conf.tokenizer(text_list, max_length=conf.max_len, padding=True)
+
+    features = {'input_ids': torch.tensor(text['input_ids']).to(conf.device),
+                'attention_mask': torch.tensor(text['attention_mask']).to(conf.device),
+                'text_list': text_list,
+                'triples_token': triples_token,
+                }
+
+    return features
+
+
+
 
 def print_row(text, triples):
     print("=" * 20)
@@ -115,13 +143,8 @@ class MyDataset(Dataset):
         content = self.dataset[item]
         text = content['text']
         spo_list = content['spo_list']
-        triples = " ; ".join(
-            f"{t['subject']} has a relation of {t['predicate']} with {t['object']}"
-            for t in spo_list
-        )
 
-        return text, triples
-
+        return text, spo_list
 
     def get_text(self, item):
         content = self.dataset[item]

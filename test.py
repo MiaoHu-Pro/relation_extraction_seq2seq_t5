@@ -1,6 +1,6 @@
 # coding:utf-8
 import torch
-from utils.tokenizer import T5PegasusTokenizer
+
 from utils.config import init_argument
 from utils.compute_rouge import compute_rouge
 

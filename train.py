@@ -23,20 +23,19 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
     print('=' * 40)
     loss = 0
     model.train()
-    for i, item in enumerate(tqdm(train_iter, desc='Epoch {}'.format(epoch))):
-        print("train : item:", item)
-        item = {k: v.to(conf.device) for k, v in item.items()}
-        print("-------------------item:", item)
+    for i, item in enumerate(tqdm(train_iter, desc='Epoch {}\n'.format(epoch))):
+
         prob = model(**item)[0]
+
         mask = item['decoder_attention_mask'][:, 1:].reshape(-1).bool()
         prob = prob[:, :-1]
         prob = prob.reshape((-1, prob.size(-1)))[mask]
         labels = item['decoder_input_ids'][:, 1:].reshape(-1)[mask]
         loss_fct = torch.nn.CrossEntropyLoss(ignore_index=-100)
         loss = loss_fct(prob, labels)
-        print("loss:", loss)
         if i % 100 == 0:
             print("Iter {}:  Training Loss: {}".format(i, loss.item()))
+
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
@@ -63,7 +62,7 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
 
     print(rouge_l)
     if rouge_l > best_triple_f1:
-        best_triple_f1 =rouge_l
+        best_triple_f1 = rouge_l
         torch.save(model.state_dict(), conf.trained_model_path + 'best_f1.pth')
 
     return best_triple_f1
@@ -77,34 +76,40 @@ def model2dev(model, conf, dev_iter):
     gen_titles = []
     label_titles = []
 
-    for item, label in dev_iter:
-        # batch is a List[Dict], so you need another loop
-        print("item:", item)
-        # content = {
-        #     k: v.to(conf.device)
-        #     for k, v in item.items()
-        #
-        # }
-        title = label  # now a single string
-        print("label:", title)
+    for item in tqdm(dev_iter, desc='valid'):
 
-                # 多卡训练
+        # batch is a List[Dict], so you need another loop
+        # print("item:", item)
+        content = {
+            k: v.to(conf.device)
+            for k, v in item.items() if k != 'triples_token' and k != 'text_list'
+
+        }
+        triples_token = item['triples_token']  # now a single string
+        input_text = item['text_list']  # now a single string
+
         if conf.data_parallel and torch.cuda.is_available():
             gen = model.module.generate(
                                         eos_token_id=conf.tokenizer.sep_token_id,
                                         decoder_start_token_id=conf.tokenizer.cls_token_id,
                                         **content)
-        else:  # 单卡训练
+        else:  # single gpu
             gen = model.generate(
 
                                  eos_token_id=conf.tokenizer.sep_token_id,
                                  decoder_start_token_id=conf.tokenizer.cls_token_id,
                                  **content)
         gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=True)
-        gen = [item.replace(' ', '') for item in gen]
+
         gen_titles.extend(gen)
-        print("prediction:", gen)
-        label_titles.extend(title)
+
+        with open(conf.trained_model_path + 'gen_log.txt', 'a') as f:
+            f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
+            # print("\ninput text", input_text)
+            # print("label:", triples_token)
+            # print("prediction:", gen)
+            f.close()
+        label_titles.extend(triples_token)
     # 计算生成标题的平均rouge分数
     scores = compute_rouges(gen_titles, label_titles, 'f')
     print("验证集的rouge分数为: {}".format(scores))
