@@ -24,6 +24,7 @@ from torch.optim import AdamW
 from transformers.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WEIGHTS_NAME, CONFIG_NAME
 # from model.Text2TripleModel import Text2TripleT5, Text2TripleBart
 from transformers import T5Model, BartModel
+
 MODELS = {
     't5': T5Model,
     'bart': BartModel,
@@ -33,8 +34,6 @@ MODELS = {
 # os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.ERROR)  # Only show errors, not warnings
-
-
 
 
 def main():
@@ -61,19 +60,15 @@ def main():
         run_test(config, test_dataloader)
 
 
-
-
 def run_train(config, train_dataloader, dev_dataloader):
     # model = MODELS[config.model_type](conf=config).to(config.device)
     # model = MODELS[config.model_type].to(config.device)
 
-    model = config.model
+    model = config.model.to(config.device)
 
-    # if config.data_parallel and torch.cuda.is_available():
-    #     device_ids = range(torch.cuda.device_count())
-    #     model = torch.nn.DataParallel(model, device_ids=device_ids)
-
-    model.to(config.device)
+    if config.data_parallel and torch.cuda.is_available():
+        device_ids = range(torch.cuda.device_count())
+        model = torch.nn.DataParallel(model, device_ids=device_ids)
 
     param_list = list(model.named_parameters())
     # logger.info(f'param_list-->{param_list}')
@@ -130,8 +125,6 @@ def run_test(config, test_dataloader):
         f.close()
 
 
-
-
 if __name__ == '__main__':
     main()
 
@@ -144,3 +137,15 @@ if __name__ == '__main__':
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5  --do_train --do_test  --epochs 1
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
+
+# this is origional data:
+# {"text": "Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza , saying it is responding to planned or actual Palestinian attacks .",
+#  "spo_list": [{"subject": "Israel", "object": "Bank", "predicate": "/location/location/contains"}]}
+#
+# so the input is a sentence -- Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza , saying it is responding to planned or actual Palestinian attacks .
+#
+# the output becames Israel has a relation of location location contains with Bank
+#
+# I would like to transfer the relation extraction to a sequence to sequence problem
+#
+# feed a sentence to model, then get a relational fact (then make it to a triple)

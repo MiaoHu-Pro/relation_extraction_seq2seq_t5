@@ -46,6 +46,11 @@ def get_args():
     parser.add_argument("--do_train",
                         action='store_true',
                         help="Whether to run training.")
+
+    parser.add_argument("--do_develop",
+                        action='store_true',
+                        help="Whether to run training.")
+
     parser.add_argument("--do_eval",
                         action='store_true',
                         help="Whether to run eval on the dev set.")
@@ -121,6 +126,7 @@ def get_args():
     parser.add_argument('--data_parallel', default=False, help='using multiple gpus or not')
 
     parser.add_argument('--max_len_generate', default=100, help='the max length of generated text')
+
 
     parser.add_argument("--warmup_steps", default=0, type=int,
                         help="Linear warmup over warmup_steps.")

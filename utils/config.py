@@ -39,10 +39,15 @@ class Config():
             args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
             do_lower_case=args.do_lower_case,
             cache_dir=args.cache_dir if args.cache_dir else None)
+
+        self.tokenizer = add_structural_tokens(self.tokenizer)
+
         self.model = model_class.from_pretrained(args.model_name_or_path,
                                                  from_tf=bool('.ckpt' in args.model_name_or_path),
                                                  config=_config,
                                                  cache_dir=args.cache_dir if args.cache_dir else None)
+
+        self.model.resize_token_embeddings(len(self.tokenizer))  # if you added tokens
 
         self.output_dir = args.output_dir
 
@@ -58,7 +63,12 @@ class Config():
         # 定义数据路径
         here = pathlib.Path(__file__).resolve().parent
         data_dir = os.path.join(here.parent, "data") + os.sep + args.dataset
-        self.train_data = data_dir + '/train.json'
+        if args.do_develop:
+            print('development environment, using train_demo.json for training and dev.json for validation')
+            self.train_data = data_dir + '/train_demo.json'
+        else:
+            print('using train.json for training ')
+            self.train_data = data_dir + '/train.json'
         self.dev_data = data_dir + '/dev.json'
         self.test_data = data_dir + '/test.json'
         self.relation_data = data_dir + '/relation.json'
@@ -72,7 +82,7 @@ class Config():
         self.dropout_prob = args.hidden_dropout_prob
         self.accumulation_steps = args.gradient_accumulation_steps
 
-        self.save_path = self.output_dir + self.dataset + os.sep + self.model_name
+        self.save_path = self.output_dir + self.dataset+'_t5_re' + os.sep + self.model_name
         if not os.path.exists(self.save_path):
             os.makedirs(self.save_path)
         # print('模型保存路径:', sub_path)
@@ -81,6 +91,14 @@ class Config():
             self.learning_rate) + '_'
         # print('trained_model_path:', self.trained_model_path)
 
+
+def add_structural_tokens(tokenizer):
+    special_tokens = ["<SUBJ>", "<PRED>", "<OBJ>", "<TRIPLE>"]
+    # Only add those that are missing
+    missing = [t for t in special_tokens if t not in tokenizer.get_vocab()]
+    if missing:
+        tokenizer.add_tokens(missing)
+    return tokenizer
 
 
 

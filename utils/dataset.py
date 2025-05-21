@@ -60,29 +60,30 @@ def collate_fn_train(data, conf):
     #     {"subject": "Cambodia", "object": "Penh", "predicate": "/location/country/capital"}]
 
     text_list = [value[0] for value in data]
-    triple_list = [value[1] for value in data]
-    triples_token = [
-        " ; ".join(
-            f"{t['subject']}' {conf.tokenizer.eos_token }  "
-            f"{t['predicate'].strip('/').replace('/', ' ').replace('_', ' ')}  "
-            f" {conf.tokenizer.eos_token} {t['object']}"
-            for t in example_spo_list
-        )
-        for example_spo_list in triple_list
-    ]
+    spo_lists = [value[1] for value in data]
 
+    sep_tok = "<TRIPLE>"
+    subj_tok = "<SUBJ>"
+    pred_tok = "<PRED>"
+    obj_tok = "<OBJ>"
 
-    # triples_token = [
-    #     " ; ".join(
-    #         f"{t['subject']} has a relation of {t['predicate']} with {t['object']}"
-    #         for t in example_spo_list
-    #     )
-    #     for example_spo_list in triple_list
-    # ]
+    targets = []
+    for spo_list in spo_lists:
+        # each spo_list is a list of dicts with keys: subject, predicate, object
+        triples = []
+        for spo in spo_list:
+            s = spo["subject"]
+            p = spo["predicate"]
+            o = spo["object"]
+            triples.append(f"{subj_tok} {s} {pred_tok} {p} {obj_tok} {o}")
+        # join multiple triples with the sep token
+        targets.append(f" {sep_tok} ".join(triples))
+
+    print("train targets: ", targets)
 
     # Encode the text list with padding
     text = conf.tokenizer(text_list, max_length=conf.max_len, padding="longest")
-    triples = conf.tokenizer(triples_token, max_length=conf.max_len, padding="longest")
+    triples = conf.tokenizer(targets, max_length=conf.max_len, padding="longest")
 
     features = {'input_ids': torch.tensor(text['input_ids']).to(conf.device),
                 'decoder_input_ids': torch.tensor(triples['input_ids']).to(conf.device),
@@ -90,33 +91,46 @@ def collate_fn_train(data, conf):
                 'decoder_attention_mask': torch.tensor(triples['attention_mask']).to(conf.device),
                 }
 
-    # print(f"features: {features}")
+
 
     return features
 
 
 def collate_fn_dev(data, conf):
     text_list = [value[0] for value in data]
-    triple_list = [value[1] for value in data]
+    spo_lists = [value[1] for value in data]
 
-    triples_token = [
-        " ; ".join(
-            f"{t['subject']}' {conf.tokenizer.eos_token }  "
-            f"{t['predicate'].strip('/').replace('/', ' ').replace('_', ' ')}  "
-            f" {conf.tokenizer.eos_token} {t['object']}"
-            for t in example_spo_list
-        )
-        for example_spo_list in triple_list
-    ]
+    triples_token = []
+    sep_tok = "<TRIPLE>"
+    subj_tok = "<SUBJ>"
+    pred_tok = "<PRED>"
+    obj_tok = "<OBJ>"
+    for spo_list in spo_lists:
+        # each spo_list is a list of dicts with keys: subject, predicate, object
+        triples = []
+        for spo in spo_list:
+            s = spo["subject"]
+            p = spo["predicate"]
+            o = spo["object"]
+            triples.append(f"{subj_tok} {s} {pred_tok} {p} {obj_tok} {o}")
+        # join multiple triples with the sep token
+        triples_token.append(f" {sep_tok} ".join(triples))
 
-    # Encode the text list with padding
     text = conf.tokenizer(text_list, max_length=conf.max_len, padding=True)
-
+    dec = conf.tokenizer(
+        triples_token,
+        max_length=conf.max_len,
+        padding=True)
     features = {'input_ids': torch.tensor(text['input_ids']).to(conf.device),
                 'attention_mask': torch.tensor(text['attention_mask']).to(conf.device),
+                # "labels": torch.tensor(dec['input_ids']).to(conf.device),
+                # "decoder_attention_mask": torch.tensor(dec['attention_mask']).to(conf.device),
+
                 'text_list': text_list,
                 'triples_token': triples_token,
                 }
+
+    print("features: ", features)
 
     return features
 
