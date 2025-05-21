@@ -67,7 +67,8 @@ def run_train(config, train_dataloader, dev_dataloader):
     # model = MODELS[config.model_type](conf=config).to(config.device)
     # model = MODELS[config.model_type].to(config.device)
 
-    model = config.model
+    model = config.model.to(config.device)
+
     if config.data_parallel and torch.cuda.is_available():
         device_ids = range(torch.cuda.device_count())
         model = torch.nn.DataParallel(model, device_ids=device_ids)

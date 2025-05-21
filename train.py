@@ -24,6 +24,10 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
     loss = 0
     model.train()
     for i, item in enumerate(tqdm(train_iter, desc='Epoch {}\n'.format(epoch))):
+        # input = {
+        #     k: v.to(conf.device)
+        #     for k, v in item.items()
+        # }
 
         prob = model(**item)[0]
 
@@ -81,7 +85,7 @@ def model2dev(model, conf, dev_iter):
         # batch is a List[Dict], so you need another loop
         # print("item:", item)
         content = {
-            k: v.to(conf.device)
+            k: v
             for k, v in item.items() if k != 'triples_token' and k != 'text_list'
 
         }
