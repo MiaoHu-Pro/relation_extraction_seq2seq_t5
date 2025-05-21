@@ -27,8 +27,12 @@ def model2test(model, config, test_dataloader):
                     **content)
             else:  # single gpu
                 gen = model.generate(
+                    max_length=conf.max_triple_len,  # e.g. 64 or 128
+                    eos_token_id=conf.tokenizer.eos_token_id,
+                    pad_token_id=conf.tokenizer.pad_token_id,
+                    early_stopping=True,
 
-                    eos_token_id=config.tokenizer.sep_token_id,
+
                     decoder_start_token_id=config.tokenizer.cls_token_id,
                     **content)
             gen = config.tokenizer.batch_decode(gen, skip_special_tokens=True)

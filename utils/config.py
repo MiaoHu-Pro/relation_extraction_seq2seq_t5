@@ -40,14 +40,14 @@ class Config():
             do_lower_case=args.do_lower_case,
             cache_dir=args.cache_dir if args.cache_dir else None)
 
-        self.tokenizer = add_structural_tokens(self.tokenizer)
+
 
         self.model = model_class.from_pretrained(args.model_name_or_path,
                                                  from_tf=bool('.ckpt' in args.model_name_or_path),
                                                  config=_config,
                                                  cache_dir=args.cache_dir if args.cache_dir else None)
 
-        self.model.resize_token_embeddings(len(self.tokenizer))  # if you added tokens
+        self.tokenizer = add_structural_tokens(self.tokenizer, self.model)
 
         self.output_dir = args.output_dir
 
@@ -91,14 +91,23 @@ class Config():
             self.learning_rate) + '_'
         # print('trained_model_path:', self.trained_model_path)
 
+def add_structural_tokens(tokenizer, model=None):
+    # Define them as special tokens, not just “normal” tokens
+    special_tokens_dict = {
+        "additional_special_tokens": ["<SUBJ>", "<PRED>", "<OBJ>", "<TRIPLE>"]
+    }
 
-def add_structural_tokens(tokenizer):
-    special_tokens = ["<SUBJ>", "<PRED>", "<OBJ>", "<TRIPLE>"]
-    # Only add those that are missing
-    missing = [t for t in special_tokens if t not in tokenizer.get_vocab()]
-    if missing:
-        tokenizer.add_tokens(missing)
+    # Add only the missing ones
+    num_added = tokenizer.add_special_tokens(special_tokens_dict)
+    if num_added > 0:
+        print(f"Added {num_added} structural special tokens: {special_tokens_dict['additional_special_tokens']}")
+        if model is not None:
+            model.resize_token_embeddings(len(tokenizer))
+            print("Resized model embeddings to match new vocab size.")
+
     return tokenizer
+
+
 
 
 

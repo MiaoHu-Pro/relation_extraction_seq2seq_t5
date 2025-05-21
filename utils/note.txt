@@ -1,0 +1,104 @@
+
+['Investigators are trying to piece together whether there are connections
+between operatives of Al Qaeda in Spain and the Madrid bombings .',
+
+'<SUBJ> Spain <PRED> /location/country/capital <OBJ> Madrid
+<TRIPLE> <SUBJ> Spain <PRED>
+     /location/location/contains <OBJ> Madrid',
+
+   pre  'Spain <PRED> /location/country/capital <OBJ> Madrid <TRIPLE>
+     <SUBJ> Spain <PRED> /location',
+
+
+
+'Automakers from the United States , Japan and Europe -- including Ford , General Motors ,
+Toyota , DaimlerChrysler , Mazda and BMW -- are among the companies behind the campaign .',
+
+'<SUBJ> Japan <PRED> /location/location/contains <OBJ> Toyota',
+  'Japan <PRED> /location/location/contains <OBJ> Toyota',
+
+
+
+'By nightfall , as the celebration came to an end , Mr. Abreu summoned his family and
+ushered them into a sport utility vehicle that belonged to his mother , who drove them to
+ Surfside Gardens , the public housing complex in Coney Island , Brooklyn , where they live .',
+
+ label: '<SUBJ> Island <PRED> /location/neighborhood/neighborhood_of <OBJ> Brooklyn <TRIPLE>
+     <SUBJ> Brooklyn <PRED> /location/location/contains <OBJ> Island',
+
+     pre: 'Island <PRED> /location/neighborhood/neighborhood_of <OBJ> Brooklyn',
+
+
+
+ 'Paris in the 1920s , Montparnasse in particular , evokes visions of exuberant talent and
+ bohemian cachet .',
+
+ label: '<SUBJ> Paris <PRED> /location/location/contains <OBJ> Montparnasse <TRIPLE>
+     <SUBJ> Montparnasse <PRED> /location/neighborhood/neighborhood_of <OBJ> Paris',
+
+    pre:   'Montparnasse <PRED> /location/neighborhood/neighborhood_',
+
+
+ "Our mussels are the best and the fattest because the water is warmer
+ than in Brittany and Normandy , '' France 's other major mussel-growing regions ,
+ said Hugo Bordin , a 25-year-old chef at Au Bord ` un Zinc in the Ile de Re town of St.
+ - Martin . ''",
+
+   '<SUBJ> France <PRED> /location/location/contains <OBJ> Normandy',
+        'France <PRED> /location/location/contains <OBJ> Normandy',
+
+ "The reasons may portend trouble for British hopes of coming out of the Scotland summit
+  meeting with what Gordon Brown , Britain 's finance minister ,
+  has called a Marshall Plan for Africa .",
+
+  '<SUBJ> Brown <PRED> /people/person/nationality <OBJ> Scotland',
+   'Brown <PRED> /people/person/nationality <OBJ> Scotland',
+
+
+
+ 'And the incident quickly set off a wave of denials and denunciations from Republican officials ,
+  including the national party chairman and Senator John McCain of Arizona ,
+  who has hired Terry Nelson , another consultant affiliated with the spot .',
+
+  '<SUBJ> McCain <PRED> /people/person/place_lived <OBJ> Arizona',
+       'McCain <PRED> /people/person/place_lived <OBJ> Arizona',
+
+  'He is survived by his wife Anne-Marie Dekker , sons Bryan -LRB- Margy -RRB- and David
+  -LRB- Melanie -RRB- , stepson Michael Favelle -LRB- Carrie -RRB- and grandchildren Leah ,
+   Nathan , Samantha , Dakota , Ansel , Owen , Elijah , Noah , and Jakob .']
+
+   '<SUBJ> David <PRED> /people/person/children <OBJ> Nathan']
+
+    pre: 'David <PRED> /people/person/children <OBJ> Nathan']
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     #
+
+
+
+
+
+
+
+
+
+
+
+
+
+

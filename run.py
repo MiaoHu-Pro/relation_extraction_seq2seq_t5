@@ -149,3 +149,29 @@ if __name__ == '__main__':
 # I would like to transfer the relation extraction to a sequence to sequence problem
 #
 # feed a sentence to model, then get a relational fact (then make it to a triple)
+
+# Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza,
+# saying it is responding to planned or actual Palestinian attacks.
+
+# <SUBJ> Israel <PRED> /location/location/contains <OBJ> West Bank <TRIPLE> …
+
+
+
+"""
+["An article on Sept. 15 about the National Football League 's effort to
+ create a home-field atmosphere for the New Orleans Saints misstated the name 
+ of the New Orleans police superintendent , who was to take part in the coin 
+ toss at a game with the New York Giants ."
+ 
+    # ['<SUBJ> Saints <PRED> /sports/sports_team/location <OBJ> Orleans 
+    <TRIPLE> <SUBJ> Orleans <PRED> /sports/sports_team_location/teams <OBJ> Saints', 
+    
+    
+      
+      # ['Saints <PRED> /sports/sports_team/location <OBJ> Orleans <TRIPLE> <SUBJ> Orleans', 
+      
+      
+
+
+
+"""
