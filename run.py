@@ -142,3 +142,17 @@ if __name__ == '__main__':
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5  --do_train --do_test  --epochs 1
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
+
+# this is origional data:
+# {"text": "Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza , saying it is responding to planned or actual Palestinian attacks .",
+#  "spo_list": [{"subject": "Israel", "object": "Bank", "predicate": "/location/location/contains"}]}
+#
+# so the input is a sentence -- Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza , saying it is responding to planned or actual Palestinian attacks .
+#
+# the output becames Israel has a relation of location location contains with Bank
+#
+# I would like to transfer the relation extraction to a sequence to sequence problem
+#
+# feed a sentence to model, then get a relational fact (then make it to a triple)
+
+

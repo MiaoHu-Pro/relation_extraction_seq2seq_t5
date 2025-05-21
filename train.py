@@ -8,7 +8,7 @@ from model.Text2TripleModel import *
 import pandas as pd
 import torch
 from tqdm import tqdm, trange
-
+logger = logging.getLogger(__name__)
 def model2train(model, conf, train_iter, dev_iter, optimizer):
     args = conf.args
     epochs = conf.epochs
@@ -38,17 +38,17 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
         loss_fct = torch.nn.CrossEntropyLoss(ignore_index=-100)
         loss = loss_fct(prob, labels)
         if i % 100 == 0:
-            print("Iter {}:  Training Loss: {}".format(i, loss.item()))
+            logger.info("Iter {}:  Training Loss: {}".format(i, loss.item()))
 
         loss.backward()
         optimizer.step()
         optimizer.zero_grad()
-    # 每一轮训练结束保存模型参数
+
 
     print(epoch, "is completed.")
     print('*' * 80)
     torch.save(model.state_dict(), conf.trained_model_path + 'epoch_%s_model.pth' % epoch)
-    results = model2dev(model, conf, dev_iter)
+    results = model2dev(model, conf,epoch, dev_iter)
     rouge_l = results['rouge-l']
     # Append evaluation log
     log_line = ('epoch:{},'
@@ -73,7 +73,7 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
 
 
 # 定义验证函数
-def model2dev(model, conf, dev_iter):
+def model2dev(model, conf, epoch, dev_iter):
     print('进入验证循环')
  # 验证模型性能，将分数最高的模型单独保存
     model.eval()
@@ -107,7 +107,7 @@ def model2dev(model, conf, dev_iter):
 
         gen_titles.extend(gen)
 
-        with open(conf.trained_model_path + 'gen_log.txt', 'a') as f:
+        with open(conf.trained_model_path + "epoch_" + str(epoch)+ '_gen_log.txt', 'a') as f:
             f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
             # print("\ninput text", input_text)
             # print("label:", triples_token)
