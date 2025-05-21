@@ -58,7 +58,7 @@ class Config():
         # 定义数据路径
         here = pathlib.Path(__file__).resolve().parent
         data_dir = os.path.join(here.parent, "data") + os.sep + args.dataset
-        self.train_data = data_dir + '/train_demo.json'
+        self.train_data = data_dir + '/train.json'
         self.dev_data = data_dir + '/dev.json'
         self.test_data = data_dir + '/test.json'
         self.relation_data = data_dir + '/relation.json'

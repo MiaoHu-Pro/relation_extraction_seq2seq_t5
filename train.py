@@ -81,7 +81,7 @@ def model2dev(model, conf, dev_iter):
         # batch is a List[Dict], so you need another loop
         # print("item:", item)
         content = {
-            k: v.to(conf.device)
+            k: v
             for k, v in item.items() if k != 'triples_token' and k != 'text_list'
 
         }
