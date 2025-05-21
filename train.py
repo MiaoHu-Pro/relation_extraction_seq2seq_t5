@@ -111,9 +111,6 @@ def model2dev(model, conf, epoch, dev_iter):
 
         with open(conf.trained_model_path + "epoch_" + str(epoch)+ '_gen_log.txt', 'a') as f:
             f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
-            # print("\ninput text", input_text)
-            # print("label:", triples_token)
-            # print("prediction:", gen)
             f.close()
         label_titles.extend(triples_token)
     # 计算生成标题的平均rouge分数

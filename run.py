@@ -119,7 +119,7 @@ def run_test(config, test_dataloader):
     logger.info('------------------test result------------------')
     logger.info(result)
 
-    with open(config.trained_model_path + 'test_result.txt') as f:
+    with open(config.trained_model_path + 'test_result.txt', model='a') as f:
         for key, value in result.items():
             f.write(f'{key}: {value}\n')
         f.close()
