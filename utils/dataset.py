@@ -34,6 +34,37 @@ def create_data(data, tokenizer, max_len=512, term='train'):
 
     return datasets
 
+def get_input(config, sample):
+    """
+     data: list of (text_str, spo_list) for each example in the dev set.
+     returns:
+       - input_ids, attention_mask  → for model.generate(...)
+       - text_list, targets_str     → for metric computation
+     """
+    text_list = [sample]
+
+    # tokenize the source texts
+    src = config.tokenizer(
+        text_list,
+        max_length=config.max_len,
+        padding="max_length",
+        truncation=True,
+        return_tensors="pt"  # you’ll get torch tensors of shape [1, seq_len]
+    )
+
+    # wrap to tensors
+    input_ids = torch.tensor(src["input_ids"]).to(config.device)
+    attention_mask = torch.tensor(src["attention_mask"]).to(config.device)
+
+    data_fetures = {
+        "input_ids": input_ids,
+        "attention_mask": attention_mask,
+        "text_list": text_list,  # raw inputs, for logging if you like
+    }
+    # print("data_fetures===> ", data_fetures)
+    return data_fetures
+
+
 
 def sequence_padding(inputs, length=None, padding=0):
     """Numpy函数，将序列padding到同一长度

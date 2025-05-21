@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>简易聊天机器人</title>
+</head>
+<body>
+    <h1>QA系统</h1>
+    <div>
+        <form method="post" action="/qa">
+            <p><b>问题：</b>{{ question }}</p>
+            <p><b>回答：</b>{{ answer }}</p>
+            <p><input type="text" name="question"></p>
+            <p><input type="submit" value="提问"></p>
+        </form>
+    </div>
+</body>
+</html>

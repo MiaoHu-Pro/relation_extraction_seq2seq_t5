@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Relation Extraction</title>
+  </head>
+  <body>
+    <h1>Relation Extraction</h1>
+    <form method="post">
+        <label for="text">Input Text</label><br>
+        <textarea name="text" id="text" rows="10" cols="50" required></textarea><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if result %}
+      <h2>Query：</h2>
+      <p>{{ question }}</p>
+      <h2>Result of Relation Extraction</h2>
+      <ul>
+        {% for relation in result['spo_list'] %}
+          <li>{{ relation }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </body>
+</html>
