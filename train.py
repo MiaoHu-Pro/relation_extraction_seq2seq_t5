@@ -10,7 +10,10 @@ from model.Text2TripleModel import *
 import pandas as pd
 import torch
 from tqdm import tqdm, trange
+
 logger = logging.getLogger(__name__)
+
+
 def model2train(model, conf, train_iter, dev_iter, optimizer):
     args = conf.args
     epochs = conf.epochs
@@ -26,10 +29,6 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
     loss = 0
     model.train()
     for i, item in enumerate(tqdm(train_iter, desc='Epoch {}\n'.format(epoch))):
-        # input = {
-        #     k: v.to(conf.device)
-        #     for k, v in item.items()
-        # }
 
         prob = model(**item)[0]
 
@@ -46,11 +45,10 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
         optimizer.step()
         optimizer.zero_grad()
 
-
     print(epoch, "is completed.")
     print('*' * 80)
     torch.save(model.state_dict(), conf.trained_model_path + 'epoch_%s_model.pth' % epoch)
-    results = model2dev(model, conf,epoch, dev_iter)
+    results = model2dev(model, conf, epoch, dev_iter)
     rouge_l = results['rouge-l']
     # Append evaluation log
     log_line = ('epoch:{},'
@@ -77,7 +75,7 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
 # 定义验证函数
 def model2dev(model, conf, epoch, dev_iter):
     print('进入验证循环')
- # 验证模型性能，将分数最高的模型单独保存
+    # 验证模型性能，将分数最高的模型单独保存
     model.eval()
     gen_titles = []
     label_titles = []
@@ -96,20 +94,21 @@ def model2dev(model, conf, epoch, dev_iter):
 
         if conf.data_parallel and torch.cuda.is_available():
             gen = model.module.generate(
-                                        eos_token_id=conf.tokenizer.sep_token_id,
-                                        decoder_start_token_id=conf.tokenizer.cls_token_id,
-                                        **content)
+                max_new_tokens=conf.max_len_generate,
+                eos_token_id=conf.tokenizer.sep_token_id,
+                decoder_start_token_id=conf.tokenizer.cls_token_id,
+                **content)
         else:  # single gpu
             gen = model.generate(
-
-                                 eos_token_id=conf.tokenizer.sep_token_id,
-                                 decoder_start_token_id=conf.tokenizer.cls_token_id,
-                                 **content)
-        gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=True)
+                max_new_tokens=conf.max_len_generate,
+                eos_token_id=conf.tokenizer.eos_token_id,
+                pad_token_id=conf.tokenizer.pad_token_id,
+                **content)
+        gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=False)
 
         gen_titles.extend(gen)
 
-        with open(conf.trained_model_path + "epoch_" + str(epoch)+ '_gen_log.txt', 'a') as f:
+        with open(conf.trained_model_path + "epoch_" + str(epoch) + '_gen_log.txt', 'a') as f:
             f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
             f.close()
         label_titles.extend(triples_token)
@@ -120,7 +119,3 @@ def model2dev(model, conf, epoch, dev_iter):
     rouge_l = scores['rouge-l']
 
     return scores
-
-
-
-

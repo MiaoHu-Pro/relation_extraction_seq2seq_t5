@@ -22,20 +22,17 @@ def model2test(model, config, test_dataloader):
 
             if config.data_parallel and torch.cuda.is_available():
                 gen = model.module.generate(
-                    eos_token_id=config.tokenizer.sep_token_id,
-                    decoder_start_token_id=config.tokenizer.cls_token_id,
+                    max_new_tokens=config.max_len_generate,
+                    eos_token_id=config.tokenizer.eos_token_id,
+                    pad_token_id=config.tokenizer.pad_token_id,
                     **content)
             else:  # single gpu
                 gen = model.generate(
-                    max_length=conf.max_triple_len,  # e.g. 64 or 128
-                    eos_token_id=conf.tokenizer.eos_token_id,
-                    pad_token_id=conf.tokenizer.pad_token_id,
-                    early_stopping=True,
-
-
-                    decoder_start_token_id=config.tokenizer.cls_token_id,
+                    max_new_tokens=config.max_len_generate,
+                    eos_token_id=config.tokenizer.eos_token_id,
+                    pad_token_id=config.tokenizer.pad_token_id,
                     **content)
-            gen = config.tokenizer.batch_decode(gen, skip_special_tokens=True)
+            gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
 
             gen_list.extend(gen)
 

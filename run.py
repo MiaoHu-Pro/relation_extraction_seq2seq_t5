@@ -98,7 +98,7 @@ def run_train(config, train_dataloader, dev_dataloader):
 def run_test(config, test_dataloader):
     logger.info('do testing ...')
     # model = MODELS[config.model_type](conf=config).to(config.device)
-    model = config.model
+    model = config.model.to(config.device)
     best_model_path = config.trained_model_path + 'best_f1.pth'
     last_model_path = config.trained_model_path + 'last_model.pth'
 

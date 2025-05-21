@@ -2,7 +2,7 @@
 from flask import Flask, request
 from test import generate
 import torch
-from utils.tokenizer import T5PegasusTokenizer
+
 from utils.config import init_argument
 import json
 import time
