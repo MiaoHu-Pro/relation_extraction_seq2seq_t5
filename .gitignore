@@ -1,2 +1,7 @@
 /saved_model/
 /save_model/
+/result_out/
+/utils/save_model/
+/__pycache__/
+/__pycache__/**
+**/__pycache__/
