@@ -12,7 +12,7 @@
 
 #SBATCH --job-name=casrel
 
-#SBATCH --output=./result_out/run_t5_base_re_e50_bs16_lr_1e-3_keep_slash-%j.out
+#SBATCH --output=./result_out/run_t5_base_re_e100_bs16_lr_1e-3_keep_slash-%j.out
 
 
 module add nvidia-cuda
@@ -35,7 +35,7 @@ echo "the job start "
 
 python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 --model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
---epochs 50  --batch_size 16  --learning_rate 1e-3  --hidden_dim  1024
+--epochs 100  --batch_size 16  --learning_rate 1e-3  --hidden_dim  1024
 
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
