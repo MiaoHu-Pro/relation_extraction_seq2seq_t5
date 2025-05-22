@@ -106,7 +106,7 @@ def model2dev(model, config, epoch, dev_iter):
         gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
 
         # print("original triples token:", triples_token)
-        print("generated:", gen)
+        # print("generated:", gen)
         triples = parse_predictions(gen)
         # print("parsed generated:", triples)
 
