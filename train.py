@@ -73,49 +73,46 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
 
 
 # 定义验证函数
-def model2dev(model, conf, epoch, dev_iter):
+def model2dev(model, config, epoch, dev_iter):
     print('进入验证循环')
     # 验证模型性能，将分数最高的模型单独保存
     model.eval()
-    gen_titles = []
-    label_titles = []
+    gen_list = []
+    label_list = []
 
     for item in tqdm(dev_iter, desc='valid'):
 
-        # batch is a List[Dict], so you need another loop
-        # print("item:", item)
         content = {
-            k: v
+            k: v.to(config.device)
             for k, v in item.items() if k != 'triples_token' and k != 'text_list'
 
         }
         triples_token = item['triples_token']  # now a single string
         input_text = item['text_list']  # now a single string
 
-        if conf.data_parallel and torch.cuda.is_available():
+        if config.data_parallel and torch.cuda.is_available():
             gen = model.module.generate(
-                max_new_tokens=conf.max_len_generate,
-                eos_token_id=conf.tokenizer.eos_token_id,
+                max_new_tokens=config.max_len_generate,
+                eos_token_id=config.tokenizer.eos_token_id,
 
                 **content)
         else:  # single gpu
             gen = model.generate(
-                max_new_tokens=conf.max_len_generate,
-                eos_token_id=conf.tokenizer.eos_token_id,
+                max_new_tokens=config.max_len_generate,
+                eos_token_id=config.tokenizer.eos_token_id,
 
                 **content)
-        gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=False)
-        # print("original triples token:", input_text)
+        gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
+
+        # print("original triples token:", triples_token)
         # print("generated:", gen)
-        # triples = parse_predictions(gen)
-        # print("parse generated:", triples)
-
         triples = parse_predictions(gen)
+        # print("parsed generated:", triples)
 
-        gen_titles.extend(triples)
-        label_titles.extend(triples_token)
+        gen_list.extend(triples)
+        label_list.extend(triples_token)
 
-        with open(conf.trained_model_path + "epoch_" + str(epoch) + '_gen_log.txt', 'a') as f:
+        with open(config.trained_model_path + "epoch_" + str(epoch) + '_gen_log.txt', 'a') as f:
             num = len(input_text)
             for i in range(num):
                 f.write(str(input_text[i]) + ' ## ' + str(triples_token[i]) + ' ## ' + str(triples[i]) + '\n')
@@ -123,7 +120,7 @@ def model2dev(model, conf, epoch, dev_iter):
 
 
     # 计算生成标题的平均rouge分数
-    scores = compute_rouges(gen_titles, label_titles, 'f')
+    scores = compute_rouges(gen_list, label_list, 'f')
     print("验证集的rouge分数为: {}".format(scores))
     # 单独保存rouge-l分数最高的模型
     rouge_l = scores['rouge-l']
