@@ -39,10 +39,13 @@ def model2test(model, config, test_dataloader):
             triples = parse_predictions(gen)
             # print("parsed generated:", triples)
 
-            gen_list.extend(gen)
+            gen_list.extend(triples)
 
             with open(config.trained_model_path + 'test_gen_log.txt', 'a') as f:
-                f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(triples) + '\n')
+                num = len(input_text)
+                for i in range(num):
+
+                    f.write(str(input_text[i]) + ' ## ' + str(triples_token[i]) + ' ## ' + str(triples[i]) + '\n')
 
                 f.close()
 
@@ -53,5 +56,5 @@ def model2test(model, config, test_dataloader):
         # 单独保存rouge-l分数最高的模型
         rouge_l = scores['rouge-l']
 
-
+        return scores
 

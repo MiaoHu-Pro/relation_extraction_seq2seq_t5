@@ -6,7 +6,7 @@ import torch
 import numpy as np
 from torch.utils.data import DataLoader, Dataset
 import json
-
+import re
 from utils.utilities import get_args
 
 
@@ -82,10 +82,6 @@ def sequence_padding(inputs, length=None, padding=0):
 
     return np.array(outputs, dtype='int64')
 
-
-import re
-
-
 def clean_predicate(p: str) -> str:
     # 1) strip leading/trailing slashes/underscores
     p = p.strip("/_")
@@ -140,42 +136,6 @@ def collate_fn_train(data, conf):
         "decoder_input_ids": torch.tensor(tgt["input_ids"]).to(conf.device),
         "decoder_attention_mask": torch.tensor(tgt["attention_mask"]).to(conf.device),
     }
-
-    # text_list = [value[0] for value in data]
-    # spo_lists = [value[1] for value in data]
-    #
-    # sep_tok = "<TRIPLE>"
-    # subj_tok = "<SUBJ>"
-    # pred_tok = "<PRED>"
-    # obj_tok = "<OBJ>"
-    #
-    # targets = []
-    # for spo_list in spo_lists:
-    #     # each spo_list is a list of dicts with keys: subject, predicate, object
-    #     triples = []
-    #     for spo in spo_list:
-    #         s = spo["subject"]
-    #         p = spo["predicate"]
-    #         o = spo["object"]
-    #         triples.append(f"{subj_tok} {s} {pred_tok} {p} {obj_tok} {o}")
-    #     # join multiple triples with the sep token
-    #     targets.append(f" {sep_tok} ".join(triples))
-    #
-    # # print("train targets: ", targets)
-    #
-    # # Encode the text list with padding
-    # text = conf.tokenizer(text_list, max_length=conf.max_len, padding="longest")
-    # triples = conf.tokenizer(targets, max_length=conf.max_len, padding="longest")
-    #
-    # features = {'input_ids': torch.tensor(text['input_ids']).to(conf.device),
-    #             'decoder_input_ids': torch.tensor(triples['input_ids']).to(conf.device),
-    #             'attention_mask': torch.tensor(text['attention_mask']).to(conf.device),
-    #             'decoder_attention_mask': torch.tensor(triples['attention_mask']).to(conf.device),
-    #             }
-    #
-    #
-    #
-    # return features
 
 
 def spo_list_to_triple_string(spo_list):

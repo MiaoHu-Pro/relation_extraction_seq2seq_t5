@@ -128,15 +128,10 @@ def run_test(config, test_dataloader):
 if __name__ == '__main__':
     main()
 
-# python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=bert-base-cased   --output_dir=./save_model --do_train  --model_type=bert --epochs 1
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=gpt2   --output_dir=./save_model/  --model_type gpt2  --do_train --do_test  --epochs 1
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=bart   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_size 1024
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=bart   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
 #  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5  --do_train --do_test  --epochs 1
-#  python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../bart-base   --output_dir=./save_model/  --model_type bart  --do_train --do_test  --epochs 1  --hidden_dim  1024
+
+ # python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5   --epochs 20  --batch_size 8 --eval_batch_size 10  --learning_rate 1e-4  --do_test
+
 
 # this is origional data:
 # {"text": "Israel has been carrying out ground raids in the West Bank and occasional airstrikes in Gaza , saying it is responding to planned or actual Palestinian attacks .",

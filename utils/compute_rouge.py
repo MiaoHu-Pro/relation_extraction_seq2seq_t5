@@ -5,6 +5,8 @@ import rouge
 def compute_rouge(source, target, compute_type='f'):
     source = ' '.join(map(str, source))
     target = ' '.join(map(str, target))
+    print("source:", source)
+    print("target:", target)
 
     # source, target = ' '.join(source), ' '.join(target)
     try:
