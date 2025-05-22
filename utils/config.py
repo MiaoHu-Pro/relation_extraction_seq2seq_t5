@@ -40,8 +40,6 @@ class Config():
             do_lower_case=args.do_lower_case,
             cache_dir=args.cache_dir if args.cache_dir else None)
 
-
-
         self.model = model_class.from_pretrained(args.model_name_or_path,
                                                  from_tf=bool('.ckpt' in args.model_name_or_path),
                                                  config=_config,
@@ -67,12 +65,14 @@ class Config():
             print('development environment, using train_demo.json for training and dev.json for validation')
             self.train_data = data_dir + '/train_demo.json'
             self.test_data = data_dir + '/test_demo.json'
+            self.dev_data = data_dir + '/dev_demo.json'
         else:
             print('using train.json for training ')
             self.train_data = data_dir + '/train.json'
             self.test_data = data_dir + '/test.json'
+            self.dev_data = data_dir + '/dev.json'
 
-        self.dev_data = data_dir + '/dev.json'
+
         self.relation_data = data_dir + '/relation.json'
         self.id2rel = json.load(open(self.relation_data, encoding='utf-8'))
         self.rel_vocab = Vocabulary(padding=None, unknown=None)

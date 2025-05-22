@@ -151,22 +151,3 @@ if __name__ == '__main__':
 # <SUBJ> Israel <PRED> /location/location/contains <OBJ> West Bank <TRIPLE> …
 
 
-
-"""
-["An article on Sept. 15 about the National Football League 's effort to
- create a home-field atmosphere for the New Orleans Saints misstated the name 
- of the New Orleans police superintendent , who was to take part in the coin 
- toss at a game with the New York Giants ."
- 
-    # ['<SUBJ> Saints <PRED> /sports/sports_team/location <OBJ> Orleans 
-    <TRIPLE> <SUBJ> Orleans <PRED> /sports/sports_team_location/teams <OBJ> Saints', 
-    
-    
-      
-      # ['Saints <PRED> /sports/sports_team/location <OBJ> Orleans <TRIPLE> <SUBJ> Orleans', 
-      
-      
-
-
-
-"""

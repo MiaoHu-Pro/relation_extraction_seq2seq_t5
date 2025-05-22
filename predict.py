@@ -1,11 +1,12 @@
-
 import pandas as pd
 from tqdm import tqdm
 import torch
 from utils.compute_rouge import *
 from utils.utilities import parse_predictions
+
+
 def model2test(model, config, test_dataloader):
-    # 设置模型为验证模式
+
     model.eval()
     gen_list = []
     label_list = []
@@ -24,13 +25,13 @@ def model2test(model, config, test_dataloader):
                 gen = model.module.generate(
                     max_new_tokens=config.max_len_generate,
                     eos_token_id=config.tokenizer.eos_token_id,
-                    pad_token_id=config.tokenizer.pad_token_id,
+
                     **content)
             else:  # single gpu
                 gen = model.generate(
                     max_new_tokens=config.max_len_generate,
                     eos_token_id=config.tokenizer.eos_token_id,
-                    # pad_token_id=config.tokenizer.pad_token_id,
+
                     **content)
             gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
 
@@ -40,16 +41,16 @@ def model2test(model, config, test_dataloader):
             # print("parsed generated:", triples)
 
             gen_list.extend(triples)
+            label_list.extend(triples_token)
 
             with open(config.trained_model_path + 'test_gen_log.txt', 'a') as f:
                 num = len(input_text)
                 for i in range(num):
-
                     f.write(str(input_text[i]) + ' ## ' + str(triples_token[i]) + ' ## ' + str(triples[i]) + '\n')
 
                 f.close()
 
-            label_list.extend(triples_token)
+
         # 计算生成标题的平均rouge分数
         scores = compute_rouges(gen_list, label_list, 'f')
         print("验证集的rouge分数为: {}".format(scores))
@@ -57,4 +58,3 @@ def model2test(model, config, test_dataloader):
         rouge_l = scores['rouge-l']
 
         return scores
-

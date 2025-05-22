@@ -95,14 +95,14 @@ def model2dev(model, conf, epoch, dev_iter):
         if conf.data_parallel and torch.cuda.is_available():
             gen = model.module.generate(
                 max_new_tokens=conf.max_len_generate,
-                eos_token_id=conf.tokenizer.sep_token_id,
-                decoder_start_token_id=conf.tokenizer.cls_token_id,
+                eos_token_id=conf.tokenizer.eos_token_id,
+
                 **content)
         else:  # single gpu
             gen = model.generate(
                 max_new_tokens=conf.max_len_generate,
                 eos_token_id=conf.tokenizer.eos_token_id,
-                pad_token_id=conf.tokenizer.pad_token_id,
+
                 **content)
         gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=False)
         # print("original triples token:", input_text)
@@ -112,15 +112,16 @@ def model2dev(model, conf, epoch, dev_iter):
 
         triples = parse_predictions(gen)
 
-        gen_titles.extend(gen)
+        gen_titles.extend(triples)
+        label_titles.extend(triples_token)
 
         with open(conf.trained_model_path + "epoch_" + str(epoch) + '_gen_log.txt', 'a') as f:
-            f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(triples) + '\n')
-            # print("\ninput text", input_text)
-            # print("label:", triples_token)
-            # print("prediction:", gen)
+            num = len(input_text)
+            for i in range(num):
+                f.write(str(input_text[i]) + ' ## ' + str(triples_token[i]) + ' ## ' + str(triples[i]) + '\n')
             f.close()
-        label_titles.extend(triples_token)
+
+
     # 计算生成标题的平均rouge分数
     scores = compute_rouges(gen_titles, label_titles, 'f')
     print("验证集的rouge分数为: {}".format(scores))
