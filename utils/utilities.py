@@ -164,31 +164,72 @@ def print_and_save_params(config, filepath):
         print(f"Error saving parameters: {e}")
 
 
+# def parse_predictions(preds):
+#     # print('parse_predictions', preds)
+#
+#     """
+#     pred_str: a single string which may contain one or more triples
+#               separated by '<TRIPLE>'.
+#     returns:  list of dicts with keys 'head', 'relation', 'tail'
+#     """
+#
+#     # pred_str = preds[0]
+#
+#     pattern = re.compile(
+#         r"""(?x)                # verbose regex
+#         (?:<SUBJ>\s*)?          # optional <SUBJ> tag
+#         (?P<head>\S+)           # the head is the next non‐space run
+#         \s+<OBJ>\s+             # the <OBJ> tag
+#         (?P<relation>\S+)       # the relation (one token)
+#         \s+<PRED>\s+            # the <PRED> tag
+#         (?P<tail>.+)$           # the rest of the segment is the tail
+#         """
+#     )
+#     batch_triples = []
+#     for pred_str in preds:
+#
+#         # 1) strip off any global <pad> or </s>, split on <TRIPLE>
+#         segments = (
+#             pred_str
+#                 .replace("<pad>", "")
+#                 .replace("</s>", "")
+#                 .split("<TRIPLE>")
+#         )
+#         triples = []
+#         for seg in segments:
+#             seg = seg.strip()
+#             if not seg:
+#                 continue
+#             m = pattern.match(seg)
+#             if not m:
+#                 # you can choose to log or raise here
+#                 continue
+#             head = m.group("head")
+#             relation = m.group("relation")
+#             tail = m.group("tail").strip()
+#             triples.append({
+#                 "subject": head,
+#                 "object": tail,
+#                 "predicate": relation,
+#             })
+#
+#         batch_triples.append(triples)
+#
+#     return batch_triples
+
 def parse_predictions(preds):
-    # print('parse_predictions', preds)
-
-    """
-    pred_str: a single string which may contain one or more triples
-              separated by '<TRIPLE>'.
-    returns:  list of dicts with keys 'head', 'relation', 'tail'
-    """
-
-    # pred_str = preds[0]
-
     pattern = re.compile(
         r"""(?x)                # verbose regex
         (?:<SUBJ>\s*)?          # optional <SUBJ> tag
         (?P<head>\S+)           # the head is the next non‐space run
-        \s+<OBJ>\s+             # the <OBJ> tag
-        (?P<relation>\S+)       # the relation (one token)
         \s+<PRED>\s+            # the <PRED> tag
+        (?P<relation>\S+)       # the relation (one token)
+        \s+<OBJ>\s+             # the <OBJ> tag
         (?P<tail>.+)$           # the rest of the segment is the tail
         """
     )
     batch_triples = []
     for pred_str in preds:
-
-        # 1) strip off any global <pad> or </s>, split on <TRIPLE>
         segments = (
             pred_str
                 .replace("<pad>", "")
@@ -202,18 +243,35 @@ def parse_predictions(preds):
                 continue
             m = pattern.match(seg)
             if not m:
-                # you can choose to log or raise here
                 continue
             head = m.group("head")
             relation = m.group("relation")
             tail = m.group("tail").strip()
             triples.append({
                 "subject": head,
-                "object": tail,
                 "predicate": relation,
+                "object": tail,
             })
-
         batch_triples.append(triples)
-
     return batch_triples
 
+if __name__ == "__main__":
+    str_list = [     '<pad>Annan <PRED> /people/person/nationality <OBJ> Iran</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>McFarlane <PRED> /business/person/company <OBJ> Toys</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Damascus <PRED> /location/administrative_division/country <OBJ> Syria <TRIPLE> <SUBJ> Syria <PRED> /location/country/capital <OBJ> Damascus <TRIPLE> <SUBJ> Syria <PRED> /location/location/contains <OBJ> Damascus <TRIPLE> <SUBJ> Syria <PRED> /location/country/administrative_divisions <OBJ> Damascus</s>',
+        '<pad>Afghanistan <PRED> /location/country/capital <OBJ> Kabul <TRIPLE> <SUBJ> Afghanistan <PRED> /location/location/contains <OBJ> Kabul</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Hills <PRED> /location/neighborhood/neighborhood_of <OBJ> Angeles <TRIPLE> <SUBJ> Angeles <PRED> /location/location/contains <OBJ> Hills</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>York <PRED> /location/location/contains <OBJ> Bridge</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Israel <PRED> /location/location/contains <OBJ> Bank <TRIPLE> <SUBJ> Israel <PRED> /location/country/capital <OBJ> Jerusalem</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Myanmar <PRED> /location/country/capital <OBJ> Mandalay <TRIPLE> <SUBJ> Myanmar <PRED> /location/location/contains <OBJ> Mandalay</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Lebanon <PRED> /location/country/capital <OBJ> Beirut <TRIPLE> <SUBJ> Lebanon <PRED> /location/location/contains <OBJ> Beirut</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Annan <PRED> /business/person/company <OBJ> Nations</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Israel <PRED> /location/location/contains <OBJ> Bank</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Missouri <PRED> /location/location/contains <OBJ> Louis</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Afghanistan <PRED> /location/location/contains <OBJ> Herat</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Flatbush <PRED> /location/neighborhood/neighborhood_of <OBJ> Brooklyn <TRIPLE> <SUBJ> Brooklyn <PRED> /location/location/contains <OBJ> Flatbush</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Ahmadinejad <PRED> /people/person/nationality <OBJ> Iran</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>',
+        '<pad>Israel <PRED> /location/location/contains <OBJ> Bank</s><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>']
+
+    result = parse_predictions(str_list)
+    print("Result:", result)
