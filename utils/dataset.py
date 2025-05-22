@@ -123,12 +123,12 @@ def collate_fn_train(data, conf):
     src = conf.tokenizer(text_list,
                          max_length=conf.max_len,
                          padding="longest",
-                         truncation=True)
+                         )
 
     tgt = conf.tokenizer(targets,
                          max_length=conf.max_len,
                          padding="longest",
-                         truncation=True)
+                         )
 
     return {
         "input_ids": torch.tensor(src["input_ids"]).to(conf.device),
@@ -173,9 +173,7 @@ def collate_fn_dev(data, conf):
     src = conf.tokenizer(
         text_list,
         max_length=conf.max_len,
-        padding="longest",
-        truncation=True,
-        return_tensors=None  # we’ll wrap to tensors ourselves
+        padding="longest"
     )
 
     # wrap to tensors
