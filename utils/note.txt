@@ -86,8 +86,48 @@ ushered them into a sport utility vehicle that belonged to his mother , who drov
 
 
 
+ ['<SUBJ> Gaughan <PRED> /people/person/place_lived <OBJ> Buffalo',
 
+ '<SUBJ> Astoria <PRED> /location/neighborhood/neighborhood_of <OBJ> Queens
+ <TRIPLE> <SUBJ> Queens <PRED> /location/location/contains <OBJ> Astoria',
+
+ '<SUBJ> Italy <PRED> /location/location/contains <OBJ> Turin',
+
+ '<SUBJ> Africa <PRED> /location/location/contains <OBJ> Tanzania',
+
+ '<SUBJ> Lagerfeld <PRED> /business/person/company <OBJ> Chanel',
+
+ '<SUBJ> Connecticut <PRED> /location/location/contains <OBJ> Fairfield',
+
+ '<SUBJ> Lee <PRED> /people/person/place_of_birth <OBJ> Monroeville
+ <TRIPLE> <SUBJ> Lee <PRED> /people/person/place_lived <OBJ> Monroeville',
+
+ '<SUBJ> Johnson <PRED> /people/deceased_person/place_of_death <OBJ> Vegas']
+
+parsed generated: [[{'subject': 'Gaughan', 'relation': '/people/person/place_of_birth', 'object': 'Buffalo'}],
+
+[{'subject': 'Astoria', 'relation': '/location/neighborhood/neighborhood_of', 'object': 'Queens'},
+{'subject': 'Queens', 'relation': '/location/location/contains', 'object': 'Astoria'}],
+
+ [{'subject': 'Italy', 'relation': '/location/location/contains', 'object': 'Turin'}],
+
+ [{'subject': 'Africa', 'relation': '/location/location/contains', 'object': 'Tanzania'}],
+
+  [{'subject': 'Lagerfeld', 'relation': '/business/person/company', 'object': 'Chanel'}],
+
+  [{'subject': 'Connecticut', 'relation': '/location/location/contains', 'object': 'Fairfield'}],
+
+  [{'subject': 'Lee', 'relation': '/people/person/place_lived', 'object': 'Monroeville'}],
+
+  [{'subject': 'Johnson', 'relation': '/people/deceased_person/place_of_death', 'object': 'Vegas'}]]
+
+----------------------
      #
+
+
+riginal[[{'subject': 'Hariri', 'object': 'Lebanon', 'predicate': '/people/person/nationality'}], [{'subject': 'Pistons', 'object': 'Hills', 'predicate': '/sports/sports_team/location'}, {'subject': 'Hills', 'object': 'Pistons', 'predicate': '/sports/sports_team_location/teams'}], [{'subject': 'Silver', 'object': 'Manhattan', 'predicate': '/people/person/place_lived'}], [{'subject': 'Bryant', 'object': 'Camden', 'predicate': '/people/person/place_lived'}], [{'subject': 'Israel', 'object': 'Jerusalem', 'predicate': '/location/country/capital'}, {'subject': 'Israel', 'object': 'Jerusalem', 'predicate': '/location/location/contains'}], [{'subject': 'Vermont', 'object': 'Mansfield', 'predicate': '/location/location/contains'}, {'subject': 'Vermont', 'object': 'Stowe', 'predicate': '/location/location/contains'}], [{'subject': 'Japan', 'object': 'Osaka', 'predicate': '/location/location/contains'}], [{'subject': 'Slimane', 'object': 'Paris', 'predicate': '/people/person/place_of_birth'}]]
+parsed [[{'subject': 'Hariri', 'object': 'Lebanon', 'predicate': '/people/person/nationality'}], [{'subject': 'Pistons', 'object': 'Hills', 'predicate': '/sports/sports_team/location'}, {'subject': 'Hills', 'object': 'Pistons', 'predicate': '/sports/sports_team_location/teams'}], [{'subject': 'Silver', 'object': 'Manhattan', 'predicate': '/people/person/place_lived'}], [{'subject': 'Bryant', 'object': 'Camden', 'predicate': '/people/person/place_lived'}], [{'subject': 'Israel', 'object': 'Jerusalem', 'predicate': '/location/location/contains'}, {'subject': 'Israel', 'object': 'Jerusalem', 'predicate': '/location/country/capital'}], [{'subject': 'Vermont', 'object': 'Stowe', 'predicate': '/location/location/contains'}, {'subject': 'Vermont', 'object': 'Mansfield', 'predicate': '/location/location/contains'}], [{'subject': 'Japan', 'object': 'Osaka', 'predicate': '/location/location/contains'}], [{'subject': 'Willhelm', 'object': 'Paris', 'predicate': '/people/person/place_lived'}]]
+
 
 
 

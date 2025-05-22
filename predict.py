@@ -3,7 +3,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 from utils.compute_rouge import *
-
+from utils.utilities import parse_predictions
 def model2test(model, config, test_dataloader):
     # 设置模型为验证模式
     model.eval()
@@ -30,14 +30,19 @@ def model2test(model, config, test_dataloader):
                 gen = model.generate(
                     max_new_tokens=config.max_len_generate,
                     eos_token_id=config.tokenizer.eos_token_id,
-                    pad_token_id=config.tokenizer.pad_token_id,
+                    # pad_token_id=config.tokenizer.pad_token_id,
                     **content)
             gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
+
+            # print("original triples token:", triples_token)
+            # print("generated:", gen)
+            triples = parse_predictions(gen)
+            # print("parsed generated:", triples)
 
             gen_list.extend(gen)
 
             with open(config.trained_model_path + 'test_gen_log.txt', 'a') as f:
-                f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
+                f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(triples) + '\n')
 
                 f.close()
 

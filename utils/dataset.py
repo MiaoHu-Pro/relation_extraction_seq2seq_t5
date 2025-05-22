@@ -115,13 +115,14 @@ def collate_fn_train(data, conf):
         pieces = []
         for spo in spo_list:
             s = spo["subject"]
-            p = clean_predicate(spo["predicate"])
+            # p = clean_predicate(spo["predicate"])
+            p = spo["predicate"]
             o = spo["object"]
             pieces.append(f"{SUB} {s} {PRED} {p} {OBJ} {o}")
         # join the per-spo pieces with your triple separator
         targets.append(f" {SEP} ".join(pieces))
-
-    # print("targets===> ", targets)
+    print("text_list===> ", text_list)
+    print("targets===> ", targets)
     # tokenize source and target
     src = conf.tokenizer(text_list,
                          max_length=conf.max_len,
@@ -185,7 +186,8 @@ def spo_list_to_triple_string(spo_list):
     pieces = []
     for spo in spo_list:
         s = spo["subject"]
-        p = clean_predicate(spo["predicate"])
+        # p = clean_predicate(spo["predicate"])
+        p = spo["predicate"]
         o = spo["object"]
         pieces.append(f"{SUB} {s} {PRED} {p} {OBJ} {o}")
     return f" {SEP} ".join(pieces)
@@ -201,9 +203,11 @@ def collate_fn_dev(data, conf):
     text_list = [ex[0] for ex in data]
     spo_lists = [ex[1] for ex in data]
 
-    # build raw target strings
-    targets_str = [spo_list_to_triple_string(spo_list)
-                   for spo_list in spo_lists]
+    # print("spo_lists===> ", spo_lists)
+    #
+    # # build raw target strings
+    # targets_str = [spo_list_to_triple_string(spo_list)
+    #                for spo_list in spo_lists]
 
     # tokenize the source texts
     src = conf.tokenizer(
@@ -222,7 +226,7 @@ def collate_fn_dev(data, conf):
         "input_ids": input_ids,
         "attention_mask": attention_mask,
         "text_list": text_list,  # raw inputs, for logging if you like
-        "triples_token": targets_str,  # raw gold triple strings, for metrics
+        "triples_token": spo_lists,  # raw gold triple strings, for metrics
     }
     # print("data_fetures===> ", data_fetures)
     return data_fetures

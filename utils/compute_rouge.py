@@ -3,7 +3,7 @@ import rouge
 
 # 计算rouge分数，   str,    str,    compute_type='f' or 'p' or 'r'
 def compute_rouge(source, target, compute_type='f'):
-    # 把 每 个 汉 字 用 空 格 分 开
+
     source, target = ' '.join(source), ' '.join(target)
     try:
         scores = rouge.Rouge().get_scores(hyps=source, refs=target)

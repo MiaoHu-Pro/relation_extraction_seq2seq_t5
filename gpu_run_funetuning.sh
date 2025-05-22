@@ -12,7 +12,7 @@
 
 #SBATCH --job-name=casrel
 
-#SBATCH --output=./result_out/run_t5_re_large_e50_bs16_new_template_remove_slash-%j.out
+#SBATCH --output=./result_out/run_t5_base_re_e50_bs16_lr_1e-4_keep_slash-%j.out
 
 
 module add nvidia-cuda
