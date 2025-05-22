@@ -3,8 +3,10 @@ import rouge
 
 # 计算rouge分数，   str,    str,    compute_type='f' or 'p' or 'r'
 def compute_rouge(source, target, compute_type='f'):
+    source = ' '.join(map(str, source))
+    target = ' '.join(map(str, target))
 
-    source, target = ' '.join(source), ' '.join(target)
+    # source, target = ' '.join(source), ' '.join(target)
     try:
         scores = rouge.Rouge().get_scores(hyps=source, refs=target)
         return {
