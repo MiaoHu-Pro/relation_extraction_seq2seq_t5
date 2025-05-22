@@ -117,8 +117,8 @@ def collate_fn_train(data, conf):
             pieces.append(f"{SUB} {s} {PRED} {p} {OBJ} {o}")
         # join the per-spo pieces with your triple separator
         targets.append(f" {SEP} ".join(pieces))
-    # print("text_list===> ", text_list)
-    # print("targets===> ", targets)
+    print("text_list===> ", text_list)
+    print("targets===> ", targets)
     # tokenize source and target
     src = conf.tokenizer(text_list,
                          max_length=conf.max_len,

@@ -94,18 +94,16 @@ def model2dev(model, config, epoch, dev_iter):
             gen = model.module.generate(
                 max_new_tokens=config.max_len_generate,
                 eos_token_id=config.tokenizer.eos_token_id,
-
                 **content)
         else:  # single gpu
             gen = model.generate(
                 max_new_tokens=config.max_len_generate,
                 eos_token_id=config.tokenizer.eos_token_id,
-
                 **content)
         gen = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
 
         # print("original triples token:", triples_token)
-        # print("generated:", gen)
+        print("generated:", gen)
         triples = parse_predictions(gen)
         # print("parsed generated:", triples)
 

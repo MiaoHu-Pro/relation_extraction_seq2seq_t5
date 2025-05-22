@@ -72,7 +72,6 @@ class Config():
             self.test_data = data_dir + '/test.json'
             self.dev_data = data_dir + '/dev.json'
 
-
         self.relation_data = data_dir + '/relation.json'
         self.id2rel = json.load(open(self.relation_data, encoding='utf-8'))
         self.rel_vocab = Vocabulary(padding=None, unknown=None)

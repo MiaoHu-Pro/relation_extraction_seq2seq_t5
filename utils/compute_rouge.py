@@ -26,6 +26,7 @@ def compute_rouge(source, target, compute_type='f'):
 
 # 计算rouge分数，    list,    list,    compute_type='f' or 'p' or 'r'
 def compute_rouges(sources, targets, compute_type='f'):
+
     scores = {
         'rouge-1': 0.0,
         'rouge-2': 0.0,
