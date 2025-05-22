@@ -106,11 +106,11 @@ def run_test(config, test_dataloader):
     if os.path.isfile(best_model_path):
         # print   (f"Loading best model from {best_model_path}")
         logger.info(f"Loading best model from {best_model_path}")
-        model.load_state_dict(torch.load(best_model_path))
+        model.load_state_dict(torch.load(best_model_path, map_location=config.device))
     elif os.path.isfile(last_model_path):
         # print  (f"Loading last model from {last_model_path}")
         logger.info(f"Loading last model from {last_model_path}")
-        model.load_state_dict(torch.load(last_model_path))
+        model.load_state_dict(torch.load(last_model_path, map_location=config.device))
     else:
         raise FileNotFoundError(f"Neither {best_model_path} nor {last_model_path} exists.")
 

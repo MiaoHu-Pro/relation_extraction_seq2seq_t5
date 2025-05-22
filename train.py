@@ -6,7 +6,7 @@ from utils.config import init_argument
 from utils.compute_rouge import *
 from utils.train_model import train_model
 from model.Text2TripleModel import *
-
+from utils.utilities import get_args, parse_predictions
 import pandas as pd
 import torch
 from tqdm import tqdm, trange
@@ -105,11 +105,20 @@ def model2dev(model, conf, epoch, dev_iter):
                 pad_token_id=conf.tokenizer.pad_token_id,
                 **content)
         gen = conf.tokenizer.batch_decode(gen, skip_special_tokens=False)
+        # print("original triples token:", input_text)
+        # print("generated:", gen)
+        # triples = parse_predictions(gen)
+        # print("parse generated:", triples)
+
+        triples = parse_predictions(gen)
 
         gen_titles.extend(gen)
 
         with open(conf.trained_model_path + "epoch_" + str(epoch) + '_gen_log.txt', 'a') as f:
-            f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(gen) + '\n')
+            f.write(str(input_text) + ' # ' + str(triples_token) + ' # ' + str(triples) + '\n')
+            # print("\ninput text", input_text)
+            # print("label:", triples_token)
+            # print("prediction:", gen)
             f.close()
         label_titles.extend(triples_token)
     # 计算生成标题的平均rouge分数

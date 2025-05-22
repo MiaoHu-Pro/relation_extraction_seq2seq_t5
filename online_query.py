@@ -3,7 +3,7 @@ import logging
 import re
 from test import *
 from flask import Flask, render_template, request, jsonify, make_response
-from utils.utilities import get_args
+from utils.utilities import get_args, parse_predictions
 from utils.dataset import get_input
 from utils.config import *
 app = Flask(__name__)
@@ -11,66 +11,7 @@ app = Flask(__name__)
 logger = logging.getLogger(__name__)
 
 
-def parse_predictions(preds):
-    print('parse_predictions', preds)
 
-    """
-    pred_str: a single string which may contain one or more triples
-              separated by '<TRIPLE>'.
-    returns:  list of dicts with keys 'head', 'relation', 'tail'
-    """
-
-    pred_str = preds[0]
-    print('pred_str', pred_str)
-    pattern = re.compile(
-        r"""(?x)                # verbose regex
-        (?:<SUBJ>\s*)?          # optional <SUBJ> tag
-        (?P<head>\S+)           # the head is the next non‐space run
-        \s+<OBJ>\s+             # the <OBJ> tag
-        (?P<relation>\S+)       # the relation (one token)
-        \s+<PRED>\s+            # the <PRED> tag
-        (?P<tail>.+)$           # the rest of the segment is the tail
-        """
-    )
-
-    # 1) strip off any global <pad> or </s>, split on <TRIPLE>
-    segments = (
-        pred_str
-            .replace("<pad>", "")
-            .replace("</s>", "")
-            .split("<TRIPLE>")
-    )
-    triples = []
-    for seg in segments:
-        seg = seg.strip()
-        if not seg:
-            continue
-        m = pattern.match(seg)
-        if not m:
-            # you can choose to log or raise here
-            continue
-        head = m.group("head")
-        relation = m.group("relation")
-        tail = m.group("tail").strip()
-        triples.append({
-            "head": head,
-            "relation": relation,
-            "tail": tail
-        })
-    return triples
-
-    # parsed = []
-    # for s in preds:
-    #     parts = s.split(maxsplit=2)
-    #     if len(parts) == 3:
-    #         head, relation, tail = parts
-    #         parsed.append({
-    #             "head": head,
-    #             "relation": relation,
-    #             "tail": tail
-    #         })
-    #
-    # return parsed
 
 def model2predict(model, config, sample):
     print('model2predict', sample)
