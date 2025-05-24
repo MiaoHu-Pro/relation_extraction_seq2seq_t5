@@ -2,6 +2,7 @@ import pandas as pd
 from tqdm import tqdm
 import torch
 from utils.compute_rouge import *
+from utils.compute_metrics import compute_metrics
 from utils.utilities import parse_predictions
 
 
@@ -54,8 +55,12 @@ def model2test(model, config, test_dataloader):
 
         # 计算生成标题的平均rouge分数
         scores = compute_rouges(gen_list, label_list, 'f')
+        matrices = compute_metrics(gen_list, label_list)
         print("验证集的rouge分数为: {}".format(scores))
         # 单独保存rouge-l分数最高的模型
-        rouge_l = scores['rouge-l']
+
+        scores['precision'] = matrices['precision']
+        scores['recall'] = matrices['recall']
+        scores['f1_score'] = matrices['f1_score']
 
         return scores

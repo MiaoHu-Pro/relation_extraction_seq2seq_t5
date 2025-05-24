@@ -4,6 +4,7 @@ import torch
 from transformers import MT5ForConditionalGeneration
 from utils.config import init_argument
 from utils.compute_rouge import *
+from utils.compute_metrics import compute_metrics
 from utils.train_model import train_model
 from model.Text2TripleModel import *
 from utils.utilities import get_args, parse_predictions
@@ -54,9 +55,15 @@ def train_epoch(model, conf, train_iter, dev_iter, optimizer, best_triple_f1, ep
     log_line = ('epoch:{},'
                 'rouge-l:{:.4f}, '
                 'rouge-2:{:.4f}, '
+                'precision:{:.4f}, '
+                'recall:{:.4f}, '
+                'f1_score:{:.4f}, '
                 'train loss:{:.4f}'.format(epoch,
                                            results['rouge-l'],
                                            results['rouge-2'],
+                                           results['precision'],
+                                           results['recall'],
+                                           results['f1_score'],
                                            loss.item()))
 
     eval_log = conf.trained_model_path + 'trained_model_evaluation_log.txt'
@@ -81,7 +88,6 @@ def model2dev(model, config, epoch, dev_iter):
     label_list = []
 
     for item in tqdm(dev_iter, desc='valid'):
-
         content = {
             k: v.to(config.device)
             for k, v in item.items() if k != 'triples_token' and k != 'text_list'
@@ -119,11 +125,14 @@ def model2dev(model, config, epoch, dev_iter):
                 f.write(str(input_text[i]) + ' ## ' + str(triples_token[i]) + ' ## ' + str(triples[i]) + '\n')
             f.close()
 
-
     # 计算生成标题的平均rouge分数
     scores = compute_rouges(gen_list, label_list, 'f')
+    matrices = compute_metrics(gen_list, label_list)
     print("验证集的rouge分数为: {}".format(scores))
     # 单独保存rouge-l分数最高的模型
-    rouge_l = scores['rouge-l']
+
+    scores['precision'] = matrices['precision']
+    scores['recall'] = matrices['recall']
+    scores['f1_score'] = matrices['f1_score']
 
     return scores

@@ -26,7 +26,7 @@ def model2predict(model, config, sample):
         pad_token_id=config.tokenizer.pad_token_id,
         **content)
     pre_triples = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
-    triples = parse_predictions_1(pre_triples, )
+    triples = parse_predictions(pre_triples, )
 
     new_dict['text'] = sample
     new_dict['spo_list'] = triples
@@ -89,4 +89,4 @@ def index():
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5000)
 # "I think we could have stood up stronger to the mayor and not bowed to this annual budget dance process that we go through , '' Councilman Charles Barron of Brooklyn said ."
-# python3 online_query.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5   --epochs 20  --batch_size 8 --eval_batch_size 10  --learning_rate 1e-4
+# python3 online_query.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5   --epochs 50  --batch_size 16 --eval_batch_size 10  --learning_rate 1e-4
