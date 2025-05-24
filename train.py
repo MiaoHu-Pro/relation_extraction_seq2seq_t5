@@ -7,7 +7,7 @@ from utils.compute_rouge import *
 from utils.compute_metrics import compute_metrics
 from utils.train_model import train_model
 from model.Text2TripleModel import *
-from utils.utilities import get_args, parse_predictions
+from utils.utilities import get_args, parse_predictions, parse_predictions_1
 import pandas as pd
 import torch
 from tqdm import tqdm, trange
