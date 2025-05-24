@@ -11,7 +11,7 @@ def parse_triples(triple_str):
 true_labels = []
 pred_labels = []
 
-with open('../results/t5-large_epochs_50_bs_16_lr_0.0001_test_gen_log.txt', 'r', encoding='utf-8') as file:
+with open('../test_results/t5-large_epochs_50_bs_16_lr_0.0001_test_gen_log.txt', 'r', encoding='utf-8') as file:
     for line in file:
         parts = line.strip().split(" ## ")
         if len(parts) == 3:
