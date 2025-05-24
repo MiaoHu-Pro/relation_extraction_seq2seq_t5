@@ -264,14 +264,8 @@ class MyDataset(Dataset):
 
 def prepare_data(conf):
     # 实例化训练集dataset
-    # print("perpare_data")
-    # print(conf.train_data)
+
     train_dataset = MyDataset(conf.train_data)
-    # for i in [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]:
-    #     # 打印训练集的前20条数据
-    #     print("train_dataset",  )
-    #
-    #     train_dataset.get_text(i)
 
     # 实例化验证集dataset
     dev_dataset = MyDataset(conf.dev_data)
