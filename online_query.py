@@ -3,7 +3,7 @@ import logging
 import re
 from test import *
 from flask import Flask, render_template, request, jsonify, make_response
-from utils.utilities import get_args, parse_predictions
+from utils.utilities import get_args, parse_predictions, parse_predictions_1
 from utils.dataset import get_input
 from utils.config import *
 app = Flask(__name__)
@@ -26,7 +26,7 @@ def model2predict(model, config, sample):
         pad_token_id=config.tokenizer.pad_token_id,
         **content)
     pre_triples = config.tokenizer.batch_decode(gen, skip_special_tokens=False)
-    triples = parse_predictions(pre_triples, )
+    triples = parse_predictions_1(pre_triples, )
 
     new_dict['text'] = sample
     new_dict['spo_list'] = triples

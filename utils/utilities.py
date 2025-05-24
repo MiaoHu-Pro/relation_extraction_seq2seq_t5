@@ -162,6 +162,58 @@ def print_and_save_params(config, filepath):
         print(f"Parameters saved to {filepath}")
     except TypeError as e:
         print(f"Error saving parameters: {e}")
+def parse_predictions_1(preds):
+    # print('parse_predictions', preds)
+
+    """
+    pred_str: a single string which may contain one or more triples
+              separated by '<TRIPLE>'.
+    returns:  list of dicts with keys 'head', 'relation', 'tail'
+    """
+
+    # pred_str = preds[0]
+
+    pattern = re.compile(
+        r"""(?x)                # verbose regex
+        (?:<SUBJ>\s*)?          # optional <SUBJ> tag
+        (?P<head>\S+)           # the head is the next non‐space run
+        \s+<OBJ>\s+             # the <OBJ> tag
+        (?P<relation>\S+)       # the relation (one token)
+        \s+<PRED>\s+            # the <PRED> tag
+        (?P<tail>.+)$           # the rest of the segment is the tail
+        """
+    )
+    batch_triples = []
+    for pred_str in preds:
+
+        # 1) strip off any global <pad> or </s>, split on <TRIPLE>
+        segments = (
+            pred_str
+                .replace("<pad>", "")
+                .replace("</s>", "")
+                .split("<TRIPLE>")
+        )
+        triples = []
+        for seg in segments:
+            seg = seg.strip()
+            if not seg:
+                continue
+            m = pattern.match(seg)
+            if not m:
+                # you can choose to log or raise here
+                continue
+            head = m.group("head")
+            relation = m.group("relation")
+            tail = m.group("tail").strip()
+            triples.append({
+                "subject": head,
+                "object": tail,
+                "predicate": relation,
+            })
+
+        batch_triples.append(triples)
+
+    return batch_triples
 
 
 def parse_predictions(preds):
