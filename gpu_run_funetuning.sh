@@ -67,6 +67,8 @@ echo "the job start "
  --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
  --epochs 50  --batch_size 16  --learning_rate 1e-4
 
+
+
 echo "the job end "
 
 

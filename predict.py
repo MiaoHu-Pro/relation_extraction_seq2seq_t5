@@ -57,7 +57,7 @@ def model2test(model, config, test_dataloader):
         scores = compute_rouges(gen_list, label_list, 'f')
         matrices = compute_metrics(gen_list, label_list)
         print("验证集的rouge分数为: {}".format(scores))
-        # 单独保存rouge-l分数最高的模型
+
 
         scores['precision'] = matrices['precision']
         scores['recall'] = matrices['recall']
