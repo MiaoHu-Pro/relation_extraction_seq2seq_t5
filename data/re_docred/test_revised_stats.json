@@ -1,0 +1,13 @@
+{
+  "num_samples": 500,
+  "text_tokens": {
+    "max": 474,
+    "min": 114,
+    "mean": 187.844
+  },
+  "spo_counts": {
+    "max": 124,
+    "min": 0,
+    "mean": 34.896
+  }
+}
