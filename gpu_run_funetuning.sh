@@ -6,11 +6,11 @@
 #!SBATCH --mem=80G
 #SBATCH --nodes=1
 #SBATCH --ntasks=16
-#SBATCH -p swarm_a100
+#SBATCH -p swarm_h100
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
-#SBATCH --output=./result_out/run_webnlg_t5_large_re_e50_bs16_lr_1e-4_keep_slash-%j.out
+#SBATCH --output=./result_out/run_wenlg_t5_large_re_e200_bs16_lr_1e-4_keep_slash-%j.out
 
 module add nvidia-cuda
 
@@ -30,13 +30,13 @@ echo "the job start "
 #--epochs 100  --batch_size 64  --learning_rate 5e-5  --hidden_dim  1024
 #
 
-#python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
-#--model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
-#--epochs 50  --batch_size 16  --learning_rate 1e-5  --hidden_dim  1024
+# python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+# --model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
+# --epochs 200  --batch_size 16  --learning_rate 1e-4  --hidden_dim  1024
 
-#python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
-#--model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
-#--epochs 50  --batch_size 16  --learning_rate 1e-4
+# python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+# --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
+#--epochs 50  --batch_size 16  --learning_rate 1e-3
 
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/gpt2 --model_type gpt2  --do_train --do_test \
@@ -54,14 +54,14 @@ echo "the job start "
 #--model_name_or_path=../t5-base --model_type t5  --do_train --do_test \
 #--epochs 3  --batch_size 128  --learning_rate 5e-5
 
-#python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
-#--model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
-#--epochs 50  --batch_size 16  --learning_rate 1e-4
+# python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+# --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
+# --epochs 50  --batch_size 16  --learning_rate 1e-3
 
 
-python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
---model_name_or_path=/scratch/mh1f25/t5-large  --model_type t5  --do_train --do_test \
---epochs 50  --batch_size 16  --learning_rate 1e-4   --hidden_dim  1024
+ python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+ --model_name_or_path=/scratch/mh1f25/t5-large  --model_type t5  --do_train --do_test \
+ --epochs 200  --batch_size 16  --learning_rate 1e-4   --hidden_dim  1024
 
 
 echo "the job end "
