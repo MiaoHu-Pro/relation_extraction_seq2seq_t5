@@ -62,12 +62,10 @@ echo "the job start "
 # python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 # --model_name_or_path=/scratch/mh1f25/t5-large  --model_type t5  --do_train --do_test \
 # --epochs 200  --batch_size 16  --learning_rate 1e-4   --hidden_dim  1024
-#
 
  python3 run.py --dataset=re_docred  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
  --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
  --epochs 50  --batch_size 16  --learning_rate 1e-4
-
 
 echo "the job end "
 
