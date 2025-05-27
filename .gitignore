@@ -6,4 +6,5 @@
 /__pycache__/**
 **/__pycache__/
 /test_results/
-/data/re_docred/*
+/data/
+data/re_docred/train_distant.json
