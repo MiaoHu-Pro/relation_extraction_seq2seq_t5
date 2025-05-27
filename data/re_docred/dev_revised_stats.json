@@ -1,13 +1,3 @@
-{
-  "num_samples": 500,
-  "text_tokens": {
-    "max": 471,
-    "min": 112,
-    "mean": 193.894
-  },
-  "spo_counts": {
-    "max": 132,
-    "min": 0,
-    "mean": 34.568
-  }
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:b51c8aace87fa25e9015a5b3490554e486233a17d52ce8cc073442db56f79ab7
+size 172
