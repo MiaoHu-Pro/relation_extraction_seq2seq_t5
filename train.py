@@ -2,7 +2,6 @@ import logging
 
 import torch
 from transformers import MT5ForConditionalGeneration
-from utils.config import init_argument
 from utils.compute_rouge import *
 from utils.compute_metrics import compute_metrics
 from utils.train_model import train_model
