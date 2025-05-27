@@ -232,9 +232,11 @@ def parse_predictions(preds):
         segments = (
             pred_str
                 .replace("<pad>", "")
+                .replace("<s>", "")
                 .replace("</s>", "")
                 .split("<TRIPLE>")
         )
+        print("\n\nsegments: ", segments)
         triples = []
         for seg in segments:
             seg = seg.strip()
