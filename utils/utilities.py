@@ -236,7 +236,7 @@ def parse_predictions(preds):
                 .replace("</s>", "")
                 .split("<TRIPLE>")
         )
-        print("\n\nsegments: ", segments)
+        # print("\n\nsegments: ", segments)
         triples = []
         for seg in segments:
             seg = seg.strip()

@@ -21,8 +21,8 @@ def compute_metrics(pred_triples, true_triples):
     """
 
     print("Computing metrics for triples...")
-    print("true_triples:", true_triples)
-    print("pred_triples:", pred_triples)
+    # print("true_triples:", true_triples)
+    # print("pred_triples:", pred_triples)
 
     true_set = set((t['subject'], t['predicate'], t['object']) for t in flatten_triples(true_triples))
     pred_set = set((t['subject'], t['predicate'], t['object']) for t in flatten_triples(pred_triples))
