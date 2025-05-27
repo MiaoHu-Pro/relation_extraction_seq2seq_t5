@@ -10,7 +10,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
-#SBATCH --output=./result_out/run_nyt_bart_large_re_e100_bs16_lr_1e-4_keep_slash-%j.out
+#SBATCH --output=./result_out/run_nyt_bart_large_re_e100_bs16_lr_1e-5_keep_slash-%j.out
 
 module add nvidia-cuda
 
@@ -40,7 +40,7 @@ echo "the job start "
 
 python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 --model_name_or_path=/scratch/mh1f25/bart-large --model_type bart  --do_train --do_test \
---epochs 100  --batch_size 16  --learning_rate 1e-4
+--epochs 100  --batch_size 16  --learning_rate 1e-5
 
 
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
@@ -70,7 +70,7 @@ python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1
 
 # python3 run.py --dataset=re_docred  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 # --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
-# --epochs 50  --batch_size 8  --learning_rate 1e-4
+# --epochs 50  --batch_size 8  --learning_rate 1e-5
 
 
 

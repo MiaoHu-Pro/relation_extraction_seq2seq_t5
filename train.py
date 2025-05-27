@@ -114,7 +114,6 @@ def model2dev(model, config, epoch, dev_iter):
         # print("generated:", gen)
         triples = parse_predictions(gen)
         # print("parsed generated:", triples)
-
         gen_list.extend(triples)
         label_list.extend(triples_token)
 
