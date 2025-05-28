@@ -8,3 +8,4 @@
 /test_results/
 /data/
 data/re_docred/train_distant.json
+*train_distant.json
