@@ -127,7 +127,7 @@ def get_args():
                         help="max length of inout text")
     parser.add_argument('--data_parallel', default=False, help='using multiple gpus or not')
 
-    parser.add_argument('--max_len_generate', default=100, help='the max length of generated text')
+    parser.add_argument('--max_len_generate', default=512, help='the max length of generated text')
 
 
     parser.add_argument("--warmup_steps", default=0, type=int,
