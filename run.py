@@ -23,10 +23,11 @@ from transformers import get_linear_schedule_with_warmup
 from torch.optim import AdamW
 from transformers.file_utils import PYTORCH_PRETRAINED_BERT_CACHE, WEIGHTS_NAME, CONFIG_NAME
 # from model.Text2TripleModel import Text2TripleT5, Text2TripleBart
-from transformers import T5Model, BartModel
+from transformers import T5Model, MT5Model, BartModel
 
 MODELS = {
     't5': T5Model,
+    'mt5': MT5Model,  # MT5 is also a T5 model
     'bart': BartModel,
 }
 

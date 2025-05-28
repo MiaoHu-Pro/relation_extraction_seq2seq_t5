@@ -9,10 +9,11 @@ from fastNLP import Vocabulary
 from transformers import BertTokenizer, AdamW
 import json
 import os, pathlib
-from transformers import T5Model, T5ForConditionalGeneration, BartModel, BartForConditionalGeneration
-from transformers import T5Config, T5Tokenizer,  BartConfig, BartTokenizer
+from transformers import T5ForConditionalGeneration, MT5ForConditionalGeneration, BartForConditionalGeneration
+from transformers import T5Config, T5Tokenizer, MT5Config, MT5Tokenizer, BartConfig, BartTokenizer
 
 MODEL_CLASSES = {
+    'mt5': (MT5Config, MT5ForConditionalGeneration, MT5Tokenizer),  # T5Model 512
     't5': (T5Config, T5ForConditionalGeneration, T5Tokenizer),
     'bart': (BartConfig, BartForConditionalGeneration, BartTokenizer),  # BartModel 1024
 }
