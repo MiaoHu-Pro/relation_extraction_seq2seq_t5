@@ -6,7 +6,7 @@
 #!SBATCH --mem=80G
 #SBATCH --nodes=1
 #SBATCH --ntasks=16
-#SBATCH -p swarm_h100
+#SBATCH -p swarm_a100
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
@@ -70,7 +70,7 @@ echo "the job start "
 
 python3 run.py --dataset=re_docred  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 --model_name_or_path=/scratch/mh1f25/mt5-base --model_type mt5  --do_train --do_test \
---epochs 50  --batch_size 4  --learning_rate 1e-4
+--epochs 10  --batch_size 4  --learning_rate 1e-4
 
 
 
