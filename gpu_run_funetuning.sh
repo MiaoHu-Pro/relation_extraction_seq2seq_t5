@@ -13,7 +13,6 @@
 #SBATCH --output=./result_out/run_webnlg_mt5base_re_e100_bs4_lr_1e-4_data_keep_slash-%j.out
 
 module add nvidia-cuda
-
 nvidia-smi
 
 echo "the job start "
@@ -23,12 +22,12 @@ echo "the job start "
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/bert-base-uncased --model_type bert  --do_train --do_test \
 #--epochs 50  --batch_size 64  --learning_rate 5e-5
-#
+
 
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/bert-large-uncased --model_type bert  --do_train --do_test \
 #--epochs 100  --batch_size 64  --learning_rate 5e-5  --hidden_dim  1024
-#
+
 
 # python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 # --model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
@@ -42,17 +41,16 @@ echo "the job start "
 # --model_name_or_path=/scratch/mh1f25/bart-large --model_type bart  --do_train --do_test \
 # --epochs 100  --batch_size 16  --learning_rate 1e-5
 
-
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/gpt2 --model_type gpt2  --do_train --do_test \
 #--epochs 20  --batch_size 64  --learning_rate 5e-5
-##
+
+
 #python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/bart-base --model_type bart  --do_train   --do_test \
 #--epochs 20  --batch_size 64  --learning_rate 5e-5
 
 
-#
 #python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=../t5-base --model_type t5  --do_train --do_test \
 #--epochs 3  --batch_size 128  --learning_rate 5e-5
