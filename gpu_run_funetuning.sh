@@ -55,8 +55,12 @@ echo "the job start "
 #--model_name_or_path=../t5-base --model_type t5  --do_train --do_test \
 #--epochs 3  --batch_size 128  --learning_rate 5e-5
 
+# python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+# --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
+# --epochs 100  --batch_size 32  --learning_rate 1e-4
+
  python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
- --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
+ --model_name_or_path=/scratch/mh1f25/mt5-base --model_type mt5  --do_train --do_test \
  --epochs 100  --batch_size 32  --learning_rate 1e-4
 
 
