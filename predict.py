@@ -56,11 +56,11 @@ def model2test(model, config, test_dataloader):
         # 计算生成标题的平均rouge分数
         scores = compute_rouges(gen_list, label_list, 'f')
         matrices = compute_metrics(gen_list, label_list)
-        print("验证集的rouge分数为: {}".format(scores))
-
 
         scores['precision'] = matrices['precision']
         scores['recall'] = matrices['recall']
         scores['f1_score'] = matrices['f1_score']
+
+        print("test result : {}".format(scores))
 
         return scores
