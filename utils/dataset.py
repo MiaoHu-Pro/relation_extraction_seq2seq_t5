@@ -238,13 +238,15 @@ class MyDataset(Dataset):
         super().__init__()
         self.dataset = [json.loads(line) for line in open(data_path, encoding='utf8')]
         print("dataset len", len(self.dataset))
+        # add self.prefix
+        self.prefix = "extract relations: "
 
     def __len__(self):
         return len(self.dataset)
 
     def __getitem__(self, item):
         content = self.dataset[item]
-        text = content['text']
+        text = self.prefix + content['text']
         spo_list = content['spo_list']
 
         return text, spo_list
