@@ -130,7 +130,7 @@ if __name__ == '__main__':
     main()
 
 # python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5  --do_train --do_test  --epochs 1
-# python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5   --epochs 20  --batch_size 8 --eval_batch_size 10  --learning_rate 1e-4  --do_test
+# python3 run.py --dataset=nyt  --data_base_dir=./data   --model_name_or_path=../t5-base   --output_dir=./save_model/  --model_type t5   --epochs 20  --batch_size 8 --eval_batch_size 10  --learning_rate 1e-4 --do_train --do_test --do_develop
 # python3 run.py --dataset=re_docred  --data_base_dir=./data   --output_dir=./save_model/  --model_name_or_path=../t5-base --model_type t5  --do_train --do_test  --epochs 1  --batch_size 1  --learning_rate 1e-4 --do_develop
 
 # this is origional data:
