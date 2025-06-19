@@ -10,7 +10,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
-#SBATCH --output=./result_out/run_webnlg_t5_large_re_e199_bs16_lr_1e-4-%j.out
+#SBATCH --output=./result_out/run_nyt_t5_large_re_e51_bs16_lr_1e-4-%j.out
 
 module add nvidia-cuda
 nvidia-smi
