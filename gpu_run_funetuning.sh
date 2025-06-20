@@ -10,7 +10,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
-#SBATCH --output=./result_out/run_nyt_t5_large_re_e51_bs16_lr_1e-4-%j.out
+#SBATCH --output=./result_out/run_webnlg_t5_large_re_e100_bs64_lr_1e-4-%j.out
 
 module add nvidia-cuda
 nvidia-smi
@@ -29,9 +29,9 @@ echo "the job start "
 #--epochs 100  --batch_size 64  --learning_rate 5e-5  --hidden_dim  1024
 
 
- python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
- --model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
- --epochs 51  --batch_size 16  --learning_rate 1e-4  --hidden_dim  1024
+# python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+# --model_name_or_path=/scratch/mh1f25/t5-large --model_type t5  --do_train --do_test \
+# --epochs 51  --batch_size 16  --learning_rate 1e-4  --hidden_dim  1024
 
 # python3 run.py --dataset=nyt  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 # --model_name_or_path=/scratch/mh1f25/t5-base --model_type t5  --do_train --do_test \
@@ -64,9 +64,10 @@ echo "the job start "
 # --epochs 100  --batch_size 8  --learning_rate 1e-4
 
 
-# python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
-# --model_name_or_path=/scratch/mh1f25/t5-large  --model_type t5  --do_train  --do_test \
-# --epochs 199  --batch_size 16  --learning_rate 1e-4   --hidden_dim  1024
+python3 run.py --dataset=webnlg  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
+--model_name_or_path=/scratch/mh1f25/t5-large  --model_type t5  --do_train  --do_test \
+--epochs 100  --batch_size 64  --learning_rate 1e-4   --hidden_dim  1024
+
 #
 #python3 run.py --dataset=re_docred  --data_base_dir=./data   --output_dir=/scratch/mh1f25/save_model/ \
 #--model_name_or_path=/scratch/mh1f25/mt5-base --model_type mt5  --do_train --do_test \
