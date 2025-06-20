@@ -6,7 +6,7 @@
 #!SBATCH --mem=80G
 #SBATCH --nodes=1
 #SBATCH --ntasks=16
-#SBATCH -p swarm_h100
+#SBATCH -p swarm_a100
 #SBATCH --gres=gpu:1
 #SBATCH --time=60:00:00
 #SBATCH --job-name=casrel
